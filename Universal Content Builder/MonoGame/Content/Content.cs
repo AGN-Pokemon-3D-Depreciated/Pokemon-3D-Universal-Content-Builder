@@ -46,7 +46,7 @@ namespace Universal_Content_Builder.MonoGame.Content
 
                 using (FileStream FileStream = new FileStream(SourceFile, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
                 {
-                    using (StreamWriter Writer = new StreamWriter(FileStream, Encoding.UTF8))
+                    using (StreamWriter Writer = new StreamWriter(FileStream, Encoding.UTF8) { AutoFlush = true })
                         Writer.Write(Temp);
                 }
 

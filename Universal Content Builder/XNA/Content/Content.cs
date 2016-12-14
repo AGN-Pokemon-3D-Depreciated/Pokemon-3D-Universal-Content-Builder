@@ -17,6 +17,7 @@ namespace Universal_Content_Builder.XNA.Content
 {
     public class Content : BuildContent, IBuildEngine, IContent
     {
+        private int Index;
         private string SourceFile;
         private string Importer;
         private string Processor;
@@ -30,8 +31,9 @@ namespace Universal_Content_Builder.XNA.Content
 
         public string ProjectFileOfTaskNode { get { return null; } }
 
-        public Content(string file)
+        public Content(int index, string file)
         {
+            Index = index;
             SourceFile = file.GetFullPath();
             string RelativePath = SourceFile.Replace(Program.Arguments.WorkingDirectory, "").Trim('/', '\\');
 
@@ -55,7 +57,7 @@ namespace Universal_Content_Builder.XNA.Content
 
                 using (FileStream FileStream = new FileStream(SourceFile, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
                 {
-                    using (StreamWriter Writer = new StreamWriter(FileStream, Encoding.UTF8))
+                    using (StreamWriter Writer = new StreamWriter(FileStream, Encoding.UTF8) { AutoFlush = true })
                         Writer.Write(Temp);
                 }
 
@@ -186,6 +188,7 @@ namespace Universal_Content_Builder.XNA.Content
         public bool BuildFile()
         {
             string RelativePath = SourceFile.Replace(Program.Arguments.WorkingDirectory, "").Trim('/', '\\');
+            string RelativeDirWithoutExtension = RelativePath.Contains("/") || RelativePath.Contains("\\") ? RelativePath.Remove(RelativePath.LastIndexOfAny(new char[] { '/', '\\' })) : "";
 
             TargetPlatform = "Windows";
 
@@ -195,7 +198,7 @@ namespace Universal_Content_Builder.XNA.Content
             CompressContent = Program.Arguments.Compress;
             RootDirectory = Program.Arguments.WorkingDirectory;
             OutputDirectory = Program.Arguments.OutputDirectory;
-            IntermediateDirectory = Program.Arguments.IntermediateDirectory;
+            IntermediateDirectory = (Program.Arguments.IntermediateDirectory + "/Xml/" + Index).GetFullPath();
             SourceAssets = new TaskItem[1];
 
             Dictionary<string, object> metaData = new Dictionary<string, object>();
@@ -222,9 +225,6 @@ namespace Universal_Content_Builder.XNA.Content
             {
                 if (!Program.Arguments.Quiet)
                     Console.WriteLine("Building: " + RelativePath);
-
-                if (File.Exists(Program.Arguments.IntermediateDirectory + "/ContentPipeline-.xml"))
-                    File.Delete(Program.Arguments.IntermediateDirectory + "/ContentPipeline-.xml");
 
                 return Execute();
             }

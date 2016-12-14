@@ -15,11 +15,7 @@ namespace Universal_Content_Builder.Content
 
         public ContentCollection(int numThread)
         {
-#if MonoGame
             ThreadPool = new SmartThreadPool().CreateWorkItemsGroup(numThread);
-#else
-            ThreadPool = new SmartThreadPool().CreateWorkItemsGroup(1);
-#endif
         }
 
         /// <summary>
@@ -139,6 +135,8 @@ namespace Universal_Content_Builder.Content
         /// </summary>
         public void BuildContent()
         {
+            int index = 1;
+
             foreach (string file in Directory.GetFiles(Program.Arguments.WorkingDirectory, "*.*", SearchOption.AllDirectories))
             {
                 string RelativePath = file.GetFullPath().Replace(Program.Arguments.WorkingDirectory, "").Trim('/', '\\');
@@ -200,7 +198,7 @@ namespace Universal_Content_Builder.Content
 #else
                 if (StringHelper.Equals(Program.Arguments.Platform, "XNA"))
                 {
-                    Content TempContent = new Content(new XNA.Content.Content(file.GetFullPath()));
+                    Content TempContent = new Content(new XNA.Content.Content(index++, file.GetFullPath()));
                     Add(RelativePath, TempContent);
                     ThreadPool.QueueWorkItem(() => TempContent.Build());
                 }
@@ -213,6 +211,13 @@ namespace Universal_Content_Builder.Content
             // Remove MonoGame Content (obj).
             foreach (string file in Directory.GetFiles(Program.Arguments.IntermediateDirectory, "*.mgcontent", SearchOption.AllDirectories))
                 File.Delete(file);
+#else
+            // Remove XNA Content (obj).
+            foreach (string file in Directory.GetFiles(Program.Arguments.IntermediateDirectory, "*.xml", SearchOption.AllDirectories))
+                File.Delete(file);
+
+            if (Directory.Exists((Program.Arguments.IntermediateDirectory + "/Xml").GetFullPath()))
+                Directory.Delete((Program.Arguments.IntermediateDirectory + "/Xml").GetFullPath(), true);
 #endif
         }
     }

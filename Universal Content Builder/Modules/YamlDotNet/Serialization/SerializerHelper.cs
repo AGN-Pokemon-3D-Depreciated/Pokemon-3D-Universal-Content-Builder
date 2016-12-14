@@ -18,7 +18,7 @@ namespace Universal_Content_Builder.Modules.YamlDotNet.Serialization
             {
                 using (FileStream FileStream = new FileStream(File, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
                 {
-                    using (StreamWriter Writer = new StreamWriter(FileStream, Encoding.UTF8))
+                    using (StreamWriter Writer = new StreamWriter(FileStream, Encoding.UTF8) { AutoFlush = true })
                     {
                         Serializer Serializer = new Serializer();
                         Serializer.Serialize(Writer, Object);
@@ -44,7 +44,7 @@ namespace Universal_Content_Builder.Modules.YamlDotNet.Serialization
             {
                 using (FileStream FileStream = new FileStream(File, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
                 {
-                    using (StreamWriter Writer = new StreamWriter(FileStream, Encoding.UTF8))
+                    using (StreamWriter Writer = new StreamWriter(FileStream, Encoding.UTF8) { AutoFlush = true })
                     {
                         Serializer Serializer = new Serializer();
                         Serializer.Serialize(Writer, Object);

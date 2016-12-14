@@ -98,7 +98,7 @@ namespace Universal_Content_Builder.Core
 
                 using (FileStream FileStream = new FileStream((Arguments.OutputDirectory + "/meta").GetFullPath(), FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
                 {
-                    using (StreamWriter Writer = new StreamWriter(FileStream, new UTF8Encoding(false)))
+                    using (StreamWriter Writer = new StreamWriter(FileStream, new UTF8Encoding(false)) { AutoFlush = true })
                         Writer.Write(string.Join(",", FinalResult));
                 }
 
@@ -139,7 +139,7 @@ namespace Universal_Content_Builder.Core
 
                 using (FileStream FileStream = new FileStream(FileValidationPath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
                 {
-                    using (StreamWriter Writer = new StreamWriter(FileStream, Encoding.UTF8))
+                    using (StreamWriter Writer = new StreamWriter(FileStream, Encoding.UTF8) { AutoFlush = true })
                         Writer.Write(string.Join("\n", Temp2));
                 }
             }
@@ -158,15 +158,12 @@ namespace Universal_Content_Builder.Core
 
                 using (FileStream FileStream = new FileStream((Arguments.WorkingDirectory + "/Content.mgcb").GetFullPath(), FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
                 {
-                    using (StreamWriter Writer = new StreamWriter(FileStream, Encoding.UTF8))
+                    using (StreamWriter Writer = new StreamWriter(FileStream, Encoding.UTF8) { AutoFlush = true })
                     {
                         Writer.Write(Arguments.GenerateMGCBProperty());
 
                         foreach (KeyValuePair<string, Content.Content> item in ContentCollection)
-                        {
                             Writer.Write(item.Value.ToString());
-                            Writer.Flush();
-                        }
                     }
                 }
             }

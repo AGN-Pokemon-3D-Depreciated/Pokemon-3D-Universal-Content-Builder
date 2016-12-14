@@ -89,8 +89,8 @@ namespace Universal_Content_Builder.Core
             {
                 try
                 {
-                    if (StringHelper.Equals(item.Key, "ContentDir", "ContentDirectory", "WorkingDir", "WorkingDirectory"))
-                        OutputDirectory = item.Value.GetFullPath();
+                    if (StringHelper.Equals(item.Key, "Content", "ContentDir", "ContentDirectory", "WorkingDir", "WorkingDirectory"))
+                        WorkingDirectory = item.Value.GetFullPath();
                     else if (StringHelper.Equals(item.Key, "Bin", "BinDir", "OutputDir", "OutputDirectory"))
                         OutputDirectory = item.Value.GetFullPath();
                     else if (StringHelper.Equals(item.Key, "Obj", "ObjDir", "IntermediateDir", "IntermediateDirectory"))
@@ -101,7 +101,7 @@ namespace Universal_Content_Builder.Core
                         Profile = item.Value;
                     else if (StringHelper.Equals(item.Key, "Compress"))
                         Compress = Convert.ToBoolean(item.Value);
-                    else if (StringHelper.Equals(item.Key, "NumThread", "NumberOfThread"))
+                    else if (StringHelper.Equals(item.Key, "Thread", "NumThread", "NumberOfThread"))
                         NumThread = Convert.ToInt32(item.Value);
                     else if (StringHelper.Equals(item.Key, "Rebuild"))
                         Rebuild = Convert.ToBoolean(item.Value);
