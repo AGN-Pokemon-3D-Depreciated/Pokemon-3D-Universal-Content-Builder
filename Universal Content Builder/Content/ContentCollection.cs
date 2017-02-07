@@ -1,11 +1,11 @@
 ﻿using Amib.Threading;
+using Modules.System;
+using Modules.System.IO;
+using Modules.YamlDotNet.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Universal_Content_Builder.Core;
-using Universal_Content_Builder.Modules.System;
-using Universal_Content_Builder.Modules.System.IO;
-using Universal_Content_Builder.Modules.YamlDotNet.Serialization;
 
 namespace Universal_Content_Builder.Content
 {
@@ -135,7 +135,9 @@ namespace Universal_Content_Builder.Content
         /// </summary>
         public void BuildContent()
         {
+#if XNA
             int index = 1;
+#endif
 
             foreach (string file in Directory.GetFiles(Program.Arguments.WorkingDirectory, "*.*", SearchOption.AllDirectories))
             {

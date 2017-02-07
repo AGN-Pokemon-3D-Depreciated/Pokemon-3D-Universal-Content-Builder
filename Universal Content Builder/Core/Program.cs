@@ -6,9 +6,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Universal_Content_Builder.Content;
-using Universal_Content_Builder.Modules.System;
-using Universal_Content_Builder.Modules.System.IO;
-using Universal_Content_Builder.Modules.System.Security.Cryptography;
+using Modules.System;
+using Modules.System.IO;
+using Modules.System.Security.Cryptography;
 
 namespace Universal_Content_Builder.Core
 {

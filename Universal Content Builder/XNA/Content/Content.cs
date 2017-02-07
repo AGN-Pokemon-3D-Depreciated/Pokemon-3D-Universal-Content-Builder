@@ -1,6 +1,10 @@
 ﻿#if XNA
 extern alias XNA;
+
 using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
+using Modules.System;
+using Modules.System.IO;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,10 +12,7 @@ using System.IO;
 using System.Text;
 using Universal_Content_Builder.Content.Interface;
 using Universal_Content_Builder.Core;
-using Universal_Content_Builder.Modules.System;
-using Universal_Content_Builder.Modules.System.IO;
 using XNA::Microsoft.Xna.Framework.Content.Pipeline.Tasks;
-using Microsoft.Build.Utilities;
 
 namespace Universal_Content_Builder.XNA.Content
 {
@@ -220,7 +221,7 @@ namespace Universal_Content_Builder.XNA.Content
             };
 
             BuildEngine = this;
-            
+
             try
             {
                 if (!Program.Arguments.Quiet)
@@ -245,13 +246,23 @@ namespace Universal_Content_Builder.XNA.Content
                 Console.Error.WriteLine("Content Error (" + RelativePath + "): " + e.Message);
         }
 
-        public void LogWarningEvent(BuildWarningEventArgs e) { }
+        public void LogWarningEvent(BuildWarningEventArgs e)
+        {
+        }
 
-        public void LogMessageEvent(BuildMessageEventArgs e) { }
+        public void LogMessageEvent(BuildMessageEventArgs e)
+        {
+        }
 
-        public void LogCustomEvent(CustomBuildEventArgs e) { }
+        public void LogCustomEvent(CustomBuildEventArgs e)
+        {
+        }
 
-        public bool BuildProjectFile(string projectFileName, string[] targetNames, IDictionary globalProperties, IDictionary targetOutputs) { return true; }
+        public bool BuildProjectFile(string projectFileName, string[] targetNames, IDictionary globalProperties, IDictionary targetOutputs)
+        {
+            return true;
+        }
     }
 }
+
 #endif

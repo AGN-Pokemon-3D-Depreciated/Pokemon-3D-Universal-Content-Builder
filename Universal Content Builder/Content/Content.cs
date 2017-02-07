@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Modules.System.IO;
+using Modules.System.Security.Cryptography;
+using Modules.YamlDotNet.Serialization;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Universal_Content_Builder.Content.Interface;
 using Universal_Content_Builder.Core;
-using Universal_Content_Builder.Modules.System.IO;
-using Universal_Content_Builder.Modules.System.Security.Cryptography;
-using Universal_Content_Builder.Modules.YamlDotNet.Serialization;
 using YamlDotNet.Serialization;
 
 namespace Universal_Content_Builder.Content
@@ -51,7 +51,9 @@ namespace Universal_Content_Builder.Content
         [YamlIgnore]
         public bool BuildStatus { get; private set; }
 
-        public Content() { }
+        public Content()
+        {
+        }
 
         public Content(IContent ContentProcessor)
         {

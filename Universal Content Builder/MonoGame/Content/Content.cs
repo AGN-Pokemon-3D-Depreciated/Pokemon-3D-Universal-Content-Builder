@@ -1,5 +1,8 @@
 ﻿#if MonoGame
 extern alias MonoGame;
+
+using Modules.System;
+using Modules.System.IO;
 using MonoGame::Microsoft.Xna.Framework.Content.Pipeline;
 using MonoGame::Microsoft.Xna.Framework.Graphics;
 using MonoGame::MonoGame.Framework.Content.Pipeline.Builder;
@@ -9,8 +12,6 @@ using System.IO;
 using System.Text;
 using Universal_Content_Builder.Content.Interface;
 using Universal_Content_Builder.Core;
-using Universal_Content_Builder.Modules.System;
-using Universal_Content_Builder.Modules.System.IO;
 
 namespace Universal_Content_Builder.MonoGame.Content
 {
@@ -281,4 +282,5 @@ namespace Universal_Content_Builder.MonoGame.Content
         }
     }
 }
+
 #endif

@@ -3,27 +3,19 @@ using System.IO;
 using System.Text;
 using YamlDotNet.Serialization;
 
-namespace Universal_Content_Builder.Modules.YamlDotNet.Serialization
+namespace Modules.YamlDotNet.Serialization
 {
     public static class SerializerHelper
     {
-        /// <summary>
-        /// Serialize Yaml Model.
-        /// </summary>
-        /// <param name="Object">Object to serialize.</param>
-        /// <param name="File">File to save.</param>
-        public static bool Serialize(this object Object, string File)
+        public static bool Serialize(this object obj, string file)
         {
             try
             {
-                using (FileStream FileStream = new FileStream(File, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
+                using (StreamWriter writer = new StreamWriter(new FileStream(file, FileMode.Create, FileAccess.Write, FileShare.ReadWrite), Encoding.UTF8))
                 {
-                    using (StreamWriter Writer = new StreamWriter(FileStream, Encoding.UTF8) { AutoFlush = true })
-                    {
-                        Serializer Serializer = new Serializer();
-                        Serializer.Serialize(Writer, Object);
-                        return true;
-                    }
+                    SerializerBuilder serializer = new SerializerBuilder();
+                    serializer.EmitDefaults().Build().Serialize(writer, obj);
+                    return true;
                 }
             }
             catch (Exception)
@@ -32,25 +24,16 @@ namespace Universal_Content_Builder.Modules.YamlDotNet.Serialization
             }
         }
 
-        /// <summary>
-        /// Serialize Yaml Model.
-        /// </summary>
-        /// <param name="Object">Object to serialize.</param>
-        /// <param name="File">File to save.</param>
-        /// <param name="ex">Ex exception.</param>
-        public static bool Serialize(this object Object, string File, out Exception ex)
+        public static bool Serialize(this object obj, string file, out Exception ex)
         {
             try
             {
-                using (FileStream FileStream = new FileStream(File, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
+                using (StreamWriter writer = new StreamWriter(new FileStream(file, FileMode.Create, FileAccess.Write, FileShare.ReadWrite), Encoding.UTF8))
                 {
-                    using (StreamWriter Writer = new StreamWriter(FileStream, Encoding.UTF8) { AutoFlush = true })
-                    {
-                        Serializer Serializer = new Serializer();
-                        Serializer.Serialize(Writer, Object);
-                        ex = null;
-                        return true;
-                    }
+                    SerializerBuilder serializer = new SerializerBuilder();
+                    serializer.EmitDefaults().Build().Serialize(writer, obj);
+                    ex = null;
+                    return true;
                 }
             }
             catch (Exception ex2)

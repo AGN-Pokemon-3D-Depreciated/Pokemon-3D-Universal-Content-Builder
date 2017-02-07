@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Universal_Content_Builder.Modules.System.IO;
-using Universal_Content_Builder.Modules.System;
+using Modules.System.IO;
+using Modules.System;
 
 namespace Universal_Content_Builder.Core
 {
     public class ArgumentsHandler
     {
         #region Build Directory
+
         /// <summary>
         /// Get Content working directory.
         /// </summary>
@@ -23,9 +24,11 @@ namespace Universal_Content_Builder.Core
         /// Get Content intermediate directory. (obj)
         /// </summary>
         public string IntermediateDirectory { get; private set; }
+
         #endregion Build Directory
 
         #region Build Config
+
         /// <summary>
         /// Get Content platform to build.
         /// </summary>
@@ -55,9 +58,11 @@ namespace Universal_Content_Builder.Core
         /// Get if there should be any console output.
         /// </summary>
         public bool Quiet { get; private set; }
+
         #endregion Build Config
 
         #region Additional Features
+
         /// <summary>
         /// Get if it should generate meta hash file.
         /// </summary>
@@ -67,6 +72,7 @@ namespace Universal_Content_Builder.Core
         /// Get if it should dump mgcb content file.
         /// </summary>
         public bool GenerateMGCB { get; private set; }
+
         #endregion Additional Features
 
         public ArgumentsHandler(string[] args)
@@ -75,9 +81,13 @@ namespace Universal_Content_Builder.Core
             OutputDirectory = (WorkingDirectory + "/bin/").GetFullPath();
             IntermediateDirectory = (WorkingDirectory + "/obj/").GetFullPath();
 
-            Platform = "";
+#if MonoGame
+            Platform = "DesktopGL";
+#else
+            Platform = "XNA";
+#endif
             Profile = "Reach";
-            Compress = false;
+            Compress = true;
             NumThread = Environment.ProcessorCount;
             Rebuild = false;
             Quiet = false;

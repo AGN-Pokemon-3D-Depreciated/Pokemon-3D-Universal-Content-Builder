@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("The Dialga Team")]
 [assembly: AssemblyProduct("Universal Content Builder")]
-[assembly: AssemblyCopyright("Copyright © jianmingyong 2016")]
+[assembly: AssemblyCopyright("Copyright © jianmingyong 2016-2017")]
 [assembly: AssemblyTrademark("The Dialga Team")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.53.3.0")]
-[assembly: AssemblyFileVersion("0.53.3.0")]
+[assembly: AssemblyVersion("0.54.1.0")]
+[assembly: AssemblyFileVersion("0.54.1.0")]

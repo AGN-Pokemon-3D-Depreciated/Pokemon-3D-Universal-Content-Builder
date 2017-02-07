@@ -3,26 +3,18 @@ using System.IO;
 using System.Text;
 using YamlDotNet.Serialization;
 
-namespace Universal_Content_Builder.Modules.YamlDotNet.Serialization
+namespace Modules.YamlDotNet.Serialization
 {
     public static class DeserializerHelper
     {
-        /// <summary>
-        /// Deserialize Yaml Model.
-        /// </summary>
-        /// <typeparam name="T">Yaml Model Class.</typeparam>
-        /// <param name="File">File to load.</param>
-        public static T Deserialize<T>(this string File) where T : class
+        public static T Deserialize<T>(this string file) where T : class
         {
             try
             {
-                using (FileStream FileStream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (StreamReader reader = new StreamReader(new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite), Encoding.UTF8))
                 {
-                    using (StreamReader Reader = new StreamReader(FileStream, Encoding.UTF8))
-                    {
-                        Deserializer Deserializer = new Deserializer();
-                        return Deserializer.Deserialize<T>(Reader);
-                    }
+                    Deserializer deserializer = new Deserializer();
+                    return deserializer.Deserialize<T>(reader);
                 }
             }
             catch (Exception)
@@ -31,24 +23,15 @@ namespace Universal_Content_Builder.Modules.YamlDotNet.Serialization
             }
         }
 
-        /// <summary>
-        /// Deserialize Yaml Model.
-        /// </summary>
-        /// <typeparam name="T">Yaml Model Class.</typeparam>
-        /// <param name="File">File to load.</param>
-        /// <param name="ex">Ex exception.</param>
-        public static T Deserialize<T>(this string File, out Exception ex) where T : class
+        public static T Deserialize<T>(this string file, out Exception ex) where T : class
         {
             try
             {
-                using (FileStream FileStream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (StreamReader reader = new StreamReader(new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite), Encoding.UTF8))
                 {
-                    using (StreamReader Reader = new StreamReader(FileStream, Encoding.UTF8))
-                    {
-                        Deserializer Deserializer = new Deserializer();
-                        ex = null;
-                        return Deserializer.Deserialize<T>(Reader);
-                    }
+                    Deserializer deserializer = new Deserializer();
+                    ex = null;
+                    return deserializer.Deserialize<T>(reader);
                 }
             }
             catch (Exception ex2)
