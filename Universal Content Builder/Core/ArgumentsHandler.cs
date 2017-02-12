@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Modules.System;
+using Modules.System.IO;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using Modules.System.IO;
-using Modules.System;
 
 namespace Universal_Content_Builder.Core
 {
@@ -10,67 +10,26 @@ namespace Universal_Content_Builder.Core
     {
         #region Build Directory
 
-        /// <summary>
-        /// Get Content working directory.
-        /// </summary>
         public string WorkingDirectory { get; private set; }
-
-        /// <summary>
-        /// Get Content output directory. (bin)
-        /// </summary>
         public string OutputDirectory { get; private set; }
-
-        /// <summary>
-        /// Get Content intermediate directory. (obj)
-        /// </summary>
         public string IntermediateDirectory { get; private set; }
 
         #endregion Build Directory
 
         #region Build Config
 
-        /// <summary>
-        /// Get Content platform to build.
-        /// </summary>
         public string Platform { get; private set; }
-
-        /// <summary>
-        /// Get Content profile to build.
-        /// </summary>
         public string Profile { get; private set; }
-
-        /// <summary>
-        /// Get if the content should be compressed.
-        /// </summary>
         public bool Compress { get; private set; }
-
-        /// <summary>
-        /// Get the number of build threads.
-        /// </summary>
         public int NumThread { get; private set; }
-
-        /// <summary>
-        /// Get if the content should be rebuild.
-        /// </summary>
         public bool Rebuild { get; private set; }
-
-        /// <summary>
-        /// Get if there should be any console output.
-        /// </summary>
         public bool Quiet { get; private set; }
 
         #endregion Build Config
 
         #region Additional Features
 
-        /// <summary>
-        /// Get if it should generate meta hash file.
-        /// </summary>
         public bool GenerateMetaHash { get; private set; }
-
-        /// <summary>
-        /// Get if it should dump mgcb content file.
-        /// </summary>
         public bool GenerateMGCB { get; private set; }
 
         #endregion Additional Features
@@ -171,10 +130,6 @@ namespace Universal_Content_Builder.Core
             }
         }
 
-        /// <summary>
-        /// Generate MGCB Global Properties
-        /// </summary>
-        /// <returns></returns>
         public string GenerateMGCBProperty()
         {
             List<string> Result = new List<string>();

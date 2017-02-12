@@ -103,8 +103,6 @@
   <ItemGroup>
     <None Include="MonoGame.Tools.Pipeline.App.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="References\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

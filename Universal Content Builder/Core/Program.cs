@@ -70,10 +70,6 @@ namespace Universal_Content_Builder.Core
             return 0;
         }
 
-        /// <summary>
-        /// Extra Component: Meta hash generation.
-        /// </summary>
-        /// <param name="ContentCollection">Content Collection.</param>
         private static void GenerateMetaHash(ContentCollection ContentCollection)
         {
             if (Arguments.GenerateMetaHash)
@@ -145,10 +141,6 @@ namespace Universal_Content_Builder.Core
             }
         }
 
-        /// <summary>
-        /// Extra Component: MGCB file generation.
-        /// </summary>
-        /// <param name="ContentCollection">Content Collection.</param>
         private static void GenerateMGCBFile(ContentCollection ContentCollection)
         {
             if (Arguments.GenerateMGCB)
