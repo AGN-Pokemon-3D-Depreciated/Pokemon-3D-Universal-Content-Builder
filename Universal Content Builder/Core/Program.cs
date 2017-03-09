@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Modules.System;
+using Modules.System.IO;
+using Modules.System.Security.Cryptography;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -6,15 +9,13 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Universal_Content_Builder.Content;
-using Modules.System;
-using Modules.System.IO;
-using Modules.System.Security.Cryptography;
 
 namespace Universal_Content_Builder.Core
 {
     public class Program
     {
-        public static ArgumentsHandler Arguments;
+        public static ArgumentsHandler Arguments { get; private set; }
+        public static ContentCollection ContentCollection { get; set; }
 
         public static int Main(string[] args)
         {
@@ -31,24 +32,19 @@ namespace Universal_Content_Builder.Core
             try
             {
                 Arguments = new ArgumentsHandler(args);
+                ContentCollection = new ContentCollection();
 
                 Stopwatch StopWatch = new Stopwatch();
-                ContentCollection ContentCollection = new ContentCollection(Arguments.NumThread);
-
                 StopWatch.Start();
 
-                if (Arguments.Rebuild)
-                    ContentCollection.CleanContent(true);
-                else
-                    ContentCollection.CleanContent(false);
-
-                ContentCollection.BuildContent();
+                ContentCollection.BuildAllContent();
 
                 StopWatch.Stop();
 
-                if (ContentCollection.Where(a => a.Value.BuildStatus == false).Count() > 0)
+                if (ContentCollection.ContentFiles.Any(a => !a.BuildSuccess))
                 {
                     Console.WriteLine("Build failed!");
+                    Console.WriteLine("Total Elapsed time: " + StopWatch.Elapsed.ToString());
                     return -1;
                 }
                 else
@@ -57,8 +53,8 @@ namespace Universal_Content_Builder.Core
                     Console.WriteLine("Total Elapsed time: " + StopWatch.Elapsed.ToString());
                 }
 
-                GenerateMetaHash(ContentCollection);
-                GenerateMGCBFile(ContentCollection);
+                GenerateMetaHash();
+                GenerateMGCBFile();
             }
             catch (Exception ex)
             {
@@ -70,7 +66,7 @@ namespace Universal_Content_Builder.Core
             return 0;
         }
 
-        private static void GenerateMetaHash(ContentCollection ContentCollection)
+        private static void GenerateMetaHash()
         {
             if (Arguments.GenerateMetaHash)
             {
@@ -79,14 +75,18 @@ namespace Universal_Content_Builder.Core
                 long MeasuredSize = 0;
                 List<string> FinalResult = new List<string>();
 
-                foreach (KeyValuePair<string, Content.Content> item in ContentCollection.Where(item => !item.Key.ToLower().StartsWith("localization/".NormalizeFilePath()) && !item.Key.ToLower().StartsWith("content/localization/".NormalizeFilePath()) && (item.Key.ToLower().EndsWith(".dat") || item.Key.ToLower().EndsWith(".trainer") || item.Key.ToLower().EndsWith(".poke"))).ToList())
+                foreach (Content.Content item in ContentCollection.ContentFiles.Where(item =>
                 {
-                    string RelativePath = item.Value.SourceFile.Replace(Arguments.WorkingDirectory, "").Trim('/', '\\');
+                    string relativePath = item.SourceFile.Replace(Arguments.WorkingDirectory, "").Trim('/', '\\');
+                    return !relativePath.ToLower().StartsWith("content/localization/".NormalizeFilePath()) && (relativePath.ToLower().EndsWith(".dat") || relativePath.ToLower().EndsWith(".trainer") || relativePath.ToLower().EndsWith(".poke"));
+                }))
+                {
+                    string relativePath = item.SourceFile.Replace(Arguments.WorkingDirectory, "").Trim('/', '\\');
 
-                    using (FileStream FileStream = new FileStream(item.Value.DestinationFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    using (FileStream FileStream = new FileStream(item.DestinationFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                         MeasuredSize += FileStream.Length;
 
-                    FinalResult.Add(RelativePath.Replace("/", "\\") + ":" + item.Value.OutputHash);
+                    FinalResult.Add(relativePath.Replace("/", "\\") + ":" + item.OutputHash);
                 }
 
                 if (!Arguments.Quiet)
@@ -141,7 +141,7 @@ namespace Universal_Content_Builder.Core
             }
         }
 
-        private static void GenerateMGCBFile(ContentCollection ContentCollection)
+        private static void GenerateMGCBFile()
         {
             if (Arguments.GenerateMGCB)
             {
@@ -154,8 +154,8 @@ namespace Universal_Content_Builder.Core
                     {
                         Writer.Write(Arguments.GenerateMGCBProperty());
 
-                        foreach (KeyValuePair<string, Content.Content> item in ContentCollection)
-                            Writer.Write(item.Value.ToString());
+                        foreach (Content.Content item in ContentCollection.ContentFiles)
+                            Writer.Write(item.ToString());
                     }
                 }
             }

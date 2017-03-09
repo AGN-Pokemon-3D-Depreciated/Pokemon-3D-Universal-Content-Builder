@@ -37,8 +37,6 @@ namespace Universal_Content_Builder.Core
         public ArgumentsHandler(string[] args)
         {
             WorkingDirectory = Environment.CurrentDirectory.GetFullPath();
-            OutputDirectory = (WorkingDirectory + "/bin/").GetFullPath();
-            IntermediateDirectory = (WorkingDirectory + "/obj/").GetFullPath();
 
 #if MonoGame
             Platform = "DesktopGL";
@@ -50,6 +48,9 @@ namespace Universal_Content_Builder.Core
             NumThread = Environment.ProcessorCount;
             Rebuild = false;
             Quiet = false;
+
+            OutputDirectory = (WorkingDirectory + "/bin/" + Platform).GetFullPath();
+            IntermediateDirectory = (WorkingDirectory + "/obj/" + Platform).GetFullPath();
 
             GenerateMetaHash = false;
             GenerateMGCB = false;
@@ -91,9 +92,14 @@ namespace Universal_Content_Builder.Core
             }
             else if (StringHelper.Equals(Platform, "XNA"))
             {
-                if (Environment.Is64BitProcess || Environment.OSVersion.Platform != PlatformID.Win32NT)
+                if (Environment.Is64BitProcess)
                 {
                     Console.Error.WriteLine("The XNA content tools only work on a 32 bit application.");
+                    Environment.Exit(-1);
+                }
+                else if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+                {
+                    Console.Error.WriteLine("The XNA content tools only work on a windows platform.");
                     Environment.Exit(-1);
                 }
                 else if (StringHelper.Equals(Environment.ExpandEnvironmentVariables("%XNAGSv4%"), "%XNAGSv4%") || !Directory.Exists(Environment.ExpandEnvironmentVariables("%XNAGSv4%").GetFullPath()))
@@ -104,7 +110,7 @@ namespace Universal_Content_Builder.Core
             }
             else if (StringHelper.Equals(Platform, "DesktopGL", "Windows"))
             {
-                if (!Environment.Is64BitProcess && Environment.OSVersion.Platform != PlatformID.Unix)
+                if (!Environment.Is64BitProcess)
                 {
                     Console.Error.WriteLine("The MonoGame content tools only work on a 64 bit application.");
                     Environment.Exit(-1);

@@ -1,154 +1,92 @@
 ﻿using Amib.Threading;
-using Modules.System;
 using Modules.System.IO;
 using Modules.YamlDotNet.Serialization;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using Universal_Content_Builder.Core;
+using System.Linq;
 
 namespace Universal_Content_Builder.Content
 {
-    public class ContentCollection : Dictionary<string, Content>
+    public class ContentCollection
     {
+        public List<Content> ContentFiles { get; private set; } = new List<Content>();
+
         private IWorkItemsGroup ThreadPool;
 
-        public ContentCollection(int numThread)
+        // Fbx Importer - MonoGame
+        private List<string> FbxImporter = new List<string>() { ".fbx" };
+
+        // Open Asset Import Library - MonoGame
+        private List<string> OpenAssetImporter = new List<string>()
         {
-            ThreadPool = new SmartThreadPool().CreateWorkItemsGroup(numThread);
+            ".dae", // Collada
+            ".gltf", "glb", // glTF
+            ".blend", // Blender 3D
+            ".3ds", // 3ds Max 3DS
+            ".ase", // 3ds Max ASE
+            ".obj", // Wavefront Object
+            ".ifc", // Industry Foundation Classes (IFC/Step)
+            ".xgl", ".zgl", // XGL
+            ".ply", // Stanford Polygon Library
+            ".dxf", // AutoCAD DXF
+            ".lwo", // LightWave
+            ".lws", // LightWave Scene
+            ".lxo", // Modo
+            ".stl", // Stereolithography
+            ".ac", // AC3D
+            ".ms3d", // Milkshape 3D
+            ".cob", ".scn", // TrueSpace
+            ".bvh", // Biovision BVH
+            ".csm", // CharacterStudio Motion
+            ".irrmesh", // Irrlicht Mesh
+            ".irr", // Irrlicht Scene
+            ".mdl", // Quake I, 3D GameStudio (3DGS)
+            ".md2", // Quake II
+            ".md3", // Quake III Mesh
+            ".pk3", // Quake III Map/BSP
+            ".mdc", // Return to Castle Wolfenstein
+            ".md5", // Doom 3
+            ".smd", ".vta", // Valve Model
+            ".ogex", // Open Game Engine Exchange
+            ".3d", // Unreal
+            ".b3d", // BlitzBasic 3D
+            ".q3d", ".q3s", // Quick3D
+            ".nff", // Neutral File Format, Sense8 WorldToolKit
+            ".off", // Object File Format
+            ".ter", // Terragen Terrain
+            ".hmp", // 3D GameStudio (3DGS) Terrain
+            ".ndo", // Izware Nendo
+        };
+
+        // X Importer - MonoGame
+        private List<string> XImporter = new List<string>() { ".x" };
+
+        public ContentCollection()
+        {
+            ThreadPool = new SmartThreadPool().CreateWorkItemsGroup(Program.Arguments.NumThread, new WIGStartInfo() { StartSuspended = true });
         }
 
-        /// <summary>
-        /// Clean the workspace before next build.
-        /// </summary>
-        /// <param name="forced">Force to clean if object file exist.</param>
-        public void CleanContent(bool forced)
+        private void LoadOldContentFiles()
         {
-            if (Directory.Exists(Program.Arguments.IntermediateDirectory))
-            {
-                foreach (string file in Directory.GetFiles(Program.Arguments.IntermediateDirectory, "*.yml", SearchOption.AllDirectories))
-                {
-                    Content OldContent = file.Deserialize<Content>();
+            string contentPath = $"{Program.Arguments.IntermediateDirectory}/Content.yml".GetFullPath();
 
-                    if (OldContent != null)
-                    {
-                        if (!File.Exists(OldContent.SourceFile.GetFullPath()))
-                        {
-                            if (!File.Exists(OldContent.DestinationFile.GetFullPath()))
-                                File.Delete(file);
-                            else
-                            {
-                                if (StringHelper.Equals(OldContent.Processor, "ModelProcessor"))
-                                    CleanFile(OldContent.DestinationFile.GetFullPath(), true);
-                                else
-                                    CleanFile(OldContent.DestinationFile.GetFullPath(), false);
-
-                                File.Delete(file);
-                            }
-                        }
-
-                        if (forced)
-                        {
-                            if (StringHelper.Equals(OldContent.Processor, "ModelProcessor"))
-                                CleanFile(OldContent.DestinationFile.GetFullPath(), true);
-                            else
-                                CleanFile(OldContent.DestinationFile.GetFullPath(), false);
-                        }
-                    }
-                    else
-                        File.Delete(file);
-                }
-
-                foreach (string Dir in Directory.GetDirectories(Program.Arguments.IntermediateDirectory, "*", SearchOption.AllDirectories))
-                {
-                    string RelativePath = Dir.Replace(Program.Arguments.IntermediateDirectory, "").Trim('/', '\\');
-
-                    CleanDirectory((Program.Arguments.OutputDirectory + "/" + RelativePath).GetFullPath());
-                    CleanDirectory(Dir);
-                }
-            }
+            if (File.Exists(contentPath))
+                Program.ContentCollection = contentPath.Deserialize<ContentCollection>() ?? new ContentCollection();
         }
 
-        private void CleanFile(string path, bool recursive)
+        private void LoadNewContentFiles()
         {
-            string RelativePath = path.GetFullPath().Replace(Program.Arguments.OutputDirectory, "").Trim('/', '\\');
-
-            if (File.Exists(path.GetFullPath()))
-            {
-                if (!Program.Arguments.Quiet)
-                    Console.WriteLine("Cleaning file: " + RelativePath);
-
-                File.Delete(path.GetFullPath());
-            }
-
-            if (File.Exists(path.GetFullPath().Replace(".xnb", ".ogg")))
-            {
-                if (!Program.Arguments.Quiet)
-                    Console.WriteLine("Cleaning file: " + path.GetFullPath().Replace(".xnb", ".ogg"));
-
-                File.Delete(path.GetFullPath().Replace(".xnb", ".ogg"));
-            }
-            else if (File.Exists(path.GetFullPath().Replace(".xnb", ".wma")))
-            {
-                if (!Program.Arguments.Quiet)
-                    Console.WriteLine("Cleaning file: " + RelativePath.Replace(".xnb", ".wma"));
-
-                File.Delete(path.GetFullPath().Replace(".xnb", ".wma"));
-            }
-
-            if (recursive)
-            {
-                foreach (string tempfile in Directory.GetFiles(path.GetFullPath().Remove(path.LastIndexOfAny(new char[] { '/', '\\' })), "*.*", SearchOption.AllDirectories))
-                {
-                    RelativePath = tempfile.GetFullPath().Replace(Program.Arguments.OutputDirectory, "").Trim('/', '\\');
-
-                    if (!Program.Arguments.Quiet)
-                        Console.WriteLine("Cleaning file: " + RelativePath);
-
-                    File.Delete(tempfile);
-                }
-            }
-        }
-
-        private void CleanDirectory(string path)
-        {
-            if (Directory.Exists(path))
-            {
-                bool CanDelete = true;
-
-                foreach (string file in Directory.GetFiles(path, "*.*", SearchOption.AllDirectories))
-                {
-                    if (File.Exists(file))
-                    {
-                        CanDelete = false;
-                        break;
-                    }
-                }
-
-                if (CanDelete)
-                    Directory.Delete(path, true);
-            }
-        }
-
-        /// <summary>
-        /// Build the content in the workspace.
-        /// </summary>
-        public void BuildContent()
-        {
-#if XNA
-            int index = 1;
-#endif
-
             foreach (string file in Directory.GetFiles(Program.Arguments.WorkingDirectory, "*.*", SearchOption.AllDirectories))
             {
-                string RelativePath = file.GetFullPath().Replace(Program.Arguments.WorkingDirectory, "").Trim('/', '\\');
+                string relativePath = file.GetFullPath().Replace(Program.Arguments.WorkingDirectory, "").Trim('/', '\\');
 
                 // Ignore folder.
                 if (Directory.Exists(file))
                     continue;
 
                 // Global Ignore.
-                if (RelativePath.ToLower().StartsWith("bin") || RelativePath.ToLower().StartsWith("obj"))
+                if (relativePath.ToLower().StartsWith("bin") || relativePath.ToLower().StartsWith("obj"))
                     continue;
 
                 // Git Ignore.
@@ -184,42 +122,36 @@ namespace Universal_Content_Builder.Content
                     continue;
 
                 // Model texture Ignore.
-                if (RelativePath.ToLower().StartsWith("content/models".NormalizeFilePath()))
+                if (relativePath.ToLower().StartsWith("content/models/".NormalizeFilePath()) ||
+                    relativePath.ToLower().StartsWith("models/".NormalizeFilePath()))
                 {
-                    if (!file.ToLower().EndsWith(".x") && !file.ToLower().EndsWith(".fbx"))
+                    if (!FbxImporter.Union(OpenAssetImporter).Union(XImporter).Any(a => file.ToLower().EndsWith(a)))
                         continue;
                 }
 
-#if MonoGame
-                if (StringHelper.Equals(Program.Arguments.Platform, "DesktopGL", "Windows"))
-                {
-                    Content TempContent = new Content(new MonoGame.Content.Content(file.GetFullPath()));
-                    Add(RelativePath, TempContent);
-                    ThreadPool.QueueWorkItem(() => TempContent.Build());
-                }
-#else
-                if (StringHelper.Equals(Program.Arguments.Platform, "XNA"))
-                {
-                    Content TempContent = new Content(new XNA.Content.Content(index++, file.GetFullPath()));
-                    Add(RelativePath, TempContent);
-                    ThreadPool.QueueWorkItem(() => TempContent.Build());
-                }
-#endif
+                if (ContentFiles.Where(a => string.Equals(a.SourceFile, file, System.StringComparison.OrdinalIgnoreCase)).Count() == 0)
+                    ContentFiles.Add(new Content(file, Program.Arguments.Platform));
             }
+        }
 
+        public void BuildAllContent()
+        {
+            LoadOldContentFiles();
+            LoadNewContentFiles();
+
+            foreach (Content content in ContentFiles)
+                ThreadPool.QueueWorkItem(() => content.BuildContent());
+
+            ThreadPool.Start();
             ThreadPool.WaitForIdle();
+
+            ContentFiles = ContentFiles.Where(a => !a.DeleteFlag).ToList();
+            this.Serialize($"{Program.Arguments.IntermediateDirectory}/Content.yml".GetFullPath());
 
 #if MonoGame
             // Remove MonoGame Content (obj).
             foreach (string file in Directory.GetFiles(Program.Arguments.IntermediateDirectory, "*.mgcontent", SearchOption.AllDirectories))
                 File.Delete(file);
-#else
-            // Remove XNA Content (obj).
-            foreach (string file in Directory.GetFiles(Program.Arguments.IntermediateDirectory, "*.xml", SearchOption.AllDirectories))
-                File.Delete(file);
-
-            if (Directory.Exists((Program.Arguments.IntermediateDirectory + "/Xml").GetFullPath()))
-                Directory.Delete((Program.Arguments.IntermediateDirectory + "/Xml").GetFullPath(), true);
 #endif
         }
     }
