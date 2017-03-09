@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Universal Content Builder")]
-[assembly: AssemblyDescription("Build Pokemon 3D Patch version content")]
+[assembly: AssemblyTitle("MGCB")]
+[assembly: AssemblyDescription("MGCB")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("The Dialga Team")]
-[assembly: AssemblyProduct("Universal Content Builder")]
+[assembly: AssemblyCompany("MonoGame, The Dialga Team")]
+[assembly: AssemblyProduct("MGCB")]
 [assembly: AssemblyCopyright("Copyright © jianmingyong 2016-2017")]
 [assembly: AssemblyTrademark("The Dialga Team")]
 [assembly: AssemblyCulture("")]

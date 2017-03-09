@@ -90,7 +90,8 @@ namespace Universal_Content_Builder.Core
                 Console.Error.WriteLine("Invalid working directory.");
                 Environment.Exit(-1);
             }
-            else if (StringHelper.Equals(Platform, "XNA"))
+
+            if (StringHelper.Equals(Platform, "XNA"))
             {
                 if (Environment.Is64BitProcess)
                 {
@@ -108,7 +109,8 @@ namespace Universal_Content_Builder.Core
                     Environment.Exit(-1);
                 }
             }
-            else if (StringHelper.Equals(Platform, "DesktopGL", "Windows"))
+
+            if (StringHelper.Equals(Platform, "DesktopGL", "Windows"))
             {
                 if (!Environment.Is64BitProcess)
                 {
@@ -116,24 +118,21 @@ namespace Universal_Content_Builder.Core
                     Environment.Exit(-1);
                 }
             }
-            else if (!StringHelper.Equals(Platform, "XNA", "DesktopGL", "Windows"))
+
+            if (!StringHelper.Equals(Platform, "XNA", "DesktopGL", "Windows"))
             {
                 Console.Error.WriteLine("Unknown Platform.");
                 Environment.Exit(-1);
             }
-            else if (!StringHelper.Equals(Profile, "Reach", "HiDef"))
+
+            if (!StringHelper.Equals(Profile, "Reach", "HiDef"))
             {
                 Console.Error.WriteLine("Unknown Profile.");
                 Environment.Exit(-1);
             }
-            else
-            {
-                if (!Directory.Exists(OutputDirectory))
-                    Directory.CreateDirectory(OutputDirectory);
 
-                if (!Directory.Exists(IntermediateDirectory))
-                    Directory.CreateDirectory(OutputDirectory);
-            }
+            OutputDirectory.CreateDirectoryIfNotExists();
+            IntermediateDirectory.CreateDirectoryIfNotExists();
         }
 
         public string GenerateMGCBProperty()

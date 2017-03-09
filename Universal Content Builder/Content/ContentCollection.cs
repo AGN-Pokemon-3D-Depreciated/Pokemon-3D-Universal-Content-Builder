@@ -129,8 +129,8 @@ namespace Universal_Content_Builder.Content
                         continue;
                 }
 
-                if (ContentFiles.Where(a => string.Equals(a.SourceFile, file, System.StringComparison.OrdinalIgnoreCase)).Count() == 0)
-                    ContentFiles.Add(new Content(file, Program.Arguments.Platform));
+                if (Program.ContentCollection.ContentFiles.Where(a => string.Equals(a.SourceFile, file, System.StringComparison.OrdinalIgnoreCase)).Count() == 0)
+                    Program.ContentCollection.ContentFiles.Add(new Content(file, Program.Arguments.Platform));
             }
         }
 
@@ -139,14 +139,14 @@ namespace Universal_Content_Builder.Content
             LoadOldContentFiles();
             LoadNewContentFiles();
 
-            foreach (Content content in ContentFiles)
+            foreach (Content content in Program.ContentCollection.ContentFiles)
                 ThreadPool.QueueWorkItem(() => content.BuildContent());
 
             ThreadPool.Start();
             ThreadPool.WaitForIdle();
 
-            ContentFiles = ContentFiles.Where(a => !a.DeleteFlag).ToList();
-            this.Serialize($"{Program.Arguments.IntermediateDirectory}/Content.yml".GetFullPath());
+            Program.ContentCollection.ContentFiles = Program.ContentCollection.ContentFiles.Where(a => !a.DeleteFlag).ToList();
+            Program.ContentCollection.Serialize($"{Program.Arguments.IntermediateDirectory}/Content.yml".GetFullPath());
 
 #if MonoGame
             // Remove MonoGame Content (obj).

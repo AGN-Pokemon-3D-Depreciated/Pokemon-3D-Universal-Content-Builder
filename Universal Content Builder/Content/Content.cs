@@ -171,11 +171,6 @@ namespace Universal_Content_Builder.Content
             }
             else
             {
-                List<string> fileToCheck = new List<string>();
-                fileToCheck.Add(DestinationFile.GetFullPath());
-                fileToCheck.AddRange(BuildOutput.Select(a => a.GetFullPath()));
-                fileToCheck.AddRange(BuildAsset.Select(a => a.GetFullPath()));
-
                 string newHash;
 
                 using (FileStream fileStream = new FileStream(SourceFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -189,6 +184,11 @@ namespace Universal_Content_Builder.Content
                 }
                 else
                 {
+                    List<string> fileToCheck = new List<string>();
+                    fileToCheck.Add(DestinationFile.GetFullPath());
+                    fileToCheck.AddRange(BuildOutput.Select(a => a.GetFullPath()));
+                    fileToCheck.AddRange(BuildAsset.Select(a => a.GetFullPath()));
+
                     foreach (string file in fileToCheck)
                     {
                         if (!File.Exists(file))
@@ -447,12 +447,17 @@ namespace Universal_Content_Builder.Content
                 string relativePathWithoutExtension = relativePath.Remove(relativePath.LastIndexOf('.'));
                 string relativeDirWithoutExtension = relativePath.Contains("/") || relativePath.Contains("\\") ? relativePath.Remove(relativePath.LastIndexOfAny(new char[] { '/', '\\' })) : "";
 
+                CheckBuildConfig();
+
+                if (string.IsNullOrEmpty(Importer) || string.IsNullOrEmpty(Processor))
+                    DestinationFile = (Program.Arguments.OutputDirectory + "/" + relativePath).GetFullPath();
+                else
+                    DestinationFile = (Program.Arguments.OutputDirectory + "/" + relativePathWithoutExtension + ".xnb").GetFullPath();
+
                 CheckFileHash();
 
                 if (RebuildFlag || Program.Arguments.Rebuild)
                 {
-                    CheckBuildConfig();
-
                     if (string.IsNullOrEmpty(Importer) || string.IsNullOrEmpty(Processor))
                     {
                         DirectoryHelper.CreateDirectoryIfNotExists((Program.Arguments.OutputDirectory + "/" + relativeDirWithoutExtension).GetFullPath());
