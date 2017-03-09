@@ -35,8 +35,10 @@ namespace Universal_Content_Builder.Content
         [YamlIgnore]
         public bool BuildSuccess { get; private set; } = false;
 
+        [YamlIgnore]
+        public bool RebuildFlag { get; private set; } = false;
+
         private string Platform;
-        private bool RebuildFlag = false;
 
         // Effect Importer - MonoGame
         private List<string> EffectImporter = new List<string>() { ".fx" };
@@ -224,6 +226,8 @@ namespace Universal_Content_Builder.Content
         private void CheckBuildConfig()
         {
             string relativePath = SourceFile.Replace(Program.Arguments.WorkingDirectory, "").Trim('/', '\\');
+
+            ProcessorParam.Clear();
 
 #if MonoGame
             // Effect Importer - MonoGame
@@ -444,7 +448,7 @@ namespace Universal_Content_Builder.Content
             try
             {
                 string relativePath = SourceFile.Replace(Program.Arguments.WorkingDirectory, "").Trim('/', '\\');
-                string relativePathWithoutExtension = relativePath.Remove(relativePath.LastIndexOf('.'));
+                string relativePathWithoutExtension = relativePath.Contains(".") ? relativePath.Remove(relativePath.LastIndexOf('.')) : relativePath;
                 string relativeDirWithoutExtension = relativePath.Contains("/") || relativePath.Contains("\\") ? relativePath.Remove(relativePath.LastIndexOfAny(new char[] { '/', '\\' })) : "";
 
                 CheckBuildConfig();

@@ -14,12 +14,10 @@ namespace Universal_Content_Builder.Content
 
         private IWorkItemsGroup ThreadPool;
 
-        // Fbx Importer - MonoGame
-        private List<string> FbxImporter = new List<string>() { ".fbx" };
-
         // Open Asset Import Library - MonoGame
         private List<string> OpenAssetImporter = new List<string>()
         {
+            ".fbx",
             ".dae", // Collada
             ".gltf", "glb", // glTF
             ".blend", // Blender 3D
@@ -57,14 +55,12 @@ namespace Universal_Content_Builder.Content
             ".ter", // Terragen Terrain
             ".hmp", // 3D GameStudio (3DGS) Terrain
             ".ndo", // Izware Nendo
+            ".x"
         };
-
-        // X Importer - MonoGame
-        private List<string> XImporter = new List<string>() { ".x" };
 
         public ContentCollection()
         {
-            ThreadPool = new SmartThreadPool().CreateWorkItemsGroup(Program.Arguments.NumThread, new WIGStartInfo() { StartSuspended = true });
+            ThreadPool = new SmartThreadPool().CreateWorkItemsGroup(Program.Arguments.NumThread);
         }
 
         private void LoadOldContentFiles()
@@ -125,7 +121,7 @@ namespace Universal_Content_Builder.Content
                 if (relativePath.ToLower().StartsWith("content/models/".NormalizeFilePath()) ||
                     relativePath.ToLower().StartsWith("models/".NormalizeFilePath()))
                 {
-                    if (!FbxImporter.Union(OpenAssetImporter).Union(XImporter).Any(a => file.ToLower().EndsWith(a)))
+                    if (!OpenAssetImporter.Any(a => file.ToLower().EndsWith(a)))
                         continue;
                 }
 
@@ -139,20 +135,21 @@ namespace Universal_Content_Builder.Content
             LoadOldContentFiles();
             LoadNewContentFiles();
 
-            foreach (Content content in Program.ContentCollection.ContentFiles)
-                ThreadPool.QueueWorkItem(() => content.BuildContent());
-
-            ThreadPool.Start();
+            Program.ContentCollection.ContentFiles.ForEach(a => ThreadPool.QueueWorkItem(() => a.BuildContent()));
             ThreadPool.WaitForIdle();
 
             Program.ContentCollection.ContentFiles = Program.ContentCollection.ContentFiles.Where(a => !a.DeleteFlag).ToList();
-            Program.ContentCollection.Serialize($"{Program.Arguments.IntermediateDirectory}/Content.yml".GetFullPath());
+
+            if (Program.ContentCollection.ContentFiles.Any(a => a.RebuildFlag))
+            {
+                Program.ContentCollection.Serialize($"{Program.Arguments.IntermediateDirectory}/Content.yml".GetFullPath());
 
 #if MonoGame
-            // Remove MonoGame Content (obj).
-            foreach (string file in Directory.GetFiles(Program.Arguments.IntermediateDirectory, "*.mgcontent", SearchOption.AllDirectories))
-                File.Delete(file);
+                // Remove MonoGame Content (obj).
+                foreach (string file in Directory.GetFiles(Program.Arguments.IntermediateDirectory, "*.mgcontent", SearchOption.AllDirectories))
+                    File.Delete(file);
 #endif
+            }
         }
     }
 }
