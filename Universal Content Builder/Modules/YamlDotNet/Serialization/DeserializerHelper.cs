@@ -17,8 +17,9 @@ namespace Modules.YamlDotNet.Serialization
                     return deserializer.Deserialize<T>(reader);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return null;
             }
         }

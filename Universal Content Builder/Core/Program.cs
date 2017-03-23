@@ -76,7 +76,7 @@ namespace Universal_Content_Builder.Core
                     using (FileStream FileStream = new FileStream(item.DestinationFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                         MeasuredSize += FileStream.Length;
 
-                    FinalResult.Add(relativePath.Replace("/", "\\") + ":" + item.OutputHash);
+                    FinalResult.Add(relativePath.Replace("/", "\\") + ":" + item.MetaHash);
                 }
 
                 if (!Arguments.Quiet)

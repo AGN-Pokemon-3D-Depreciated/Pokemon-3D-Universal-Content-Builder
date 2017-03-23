@@ -18,17 +18,18 @@ namespace Universal_Content_Builder.Content
 {
     public class Content
     {
-        public Version BuildTool { get; private set; }
-        public string SourceFile { get; private set; }
-        public string DestinationFile { get; private set; }
-        public string Importer { get; private set; }
-        public string Processor { get; private set; }
-        public Dictionary<string, string> ProcessorParam { get; private set; } = new Dictionary<string, string>();
+        public string BuildTool { get; set; }
 
-        public string OutputHash { get; private set; }
+        public string SourceFile { get; set; }
+        public string DestinationFile { get; set; }
+        public string Importer { get; set; }
+        public string Processor { get; set; }
+        public Dictionary<string, string> ProcessorParam { get; set; } = new Dictionary<string, string>();
 
-        public List<string> BuildOutput { get; private set; } = new List<string>();
-        public List<string> BuildAsset { get; private set; } = new List<string>();
+        public string MetaHash { get; set; }
+
+        public List<string> BuildOutput { get; set; } = new List<string>();
+        public List<string> BuildAsset { get; set; } = new List<string>();
 
         [YamlIgnore]
         public bool DeleteFlag { get; private set; } = false;
@@ -163,7 +164,7 @@ namespace Universal_Content_Builder.Content
         {
             SourceFile = sourceFile;
             Platform = platform;
-            BuildTool = Program.Arguments.BuildTool;
+            BuildTool = Program.Arguments.BuildTool.ToString();
         }
 
         private void CheckFileHash()
@@ -180,11 +181,11 @@ namespace Universal_Content_Builder.Content
                 using (FileStream fileStream = new FileStream(SourceFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     newHash = fileStream.ToMD5();
 
-                if (!StringHelper.Equals(OutputHash, newHash) || Program.Arguments.BuildTool != BuildTool)
+                if (!StringHelper.Equals(MetaHash, newHash) || !StringHelper.Equals(Program.Arguments.BuildTool.ToString(), BuildTool))
                 {
                     CleanFile();
-                    BuildTool = Program.Arguments.BuildTool;
-                    OutputHash = newHash;
+                    BuildTool = Program.Arguments.BuildTool.ToString();
+                    MetaHash = newHash;
                     RebuildFlag = true;
                 }
                 else

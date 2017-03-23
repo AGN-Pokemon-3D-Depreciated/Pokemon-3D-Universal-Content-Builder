@@ -14,7 +14,7 @@ namespace Modules.YamlDotNet.Serialization
                 using (StreamWriter writer = new StreamWriter(new FileStream(file, FileMode.Create, FileAccess.Write, FileShare.ReadWrite), Encoding.UTF8))
                 {
                     SerializerBuilder serializer = new SerializerBuilder();
-                    serializer.EmitDefaults().Build().Serialize(writer, obj);
+                    serializer.Build().Serialize(writer, obj);
                     return true;
                 }
             }
@@ -31,7 +31,7 @@ namespace Modules.YamlDotNet.Serialization
                 using (StreamWriter writer = new StreamWriter(new FileStream(file, FileMode.Create, FileAccess.Write, FileShare.ReadWrite), Encoding.UTF8))
                 {
                     SerializerBuilder serializer = new SerializerBuilder();
-                    serializer.EmitDefaults().Build().Serialize(writer, obj);
+                    serializer.Build().Serialize(writer, obj);
                     ex = null;
                     return true;
                 }

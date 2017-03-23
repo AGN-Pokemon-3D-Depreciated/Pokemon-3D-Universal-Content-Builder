@@ -10,7 +10,7 @@ namespace Universal_Content_Builder.Content
 {
     public class ContentCollection
     {
-        public List<Content> ContentFiles { get; private set; } = new List<Content>();
+        public List<Content> ContentFiles { get; set; } = new List<Content>();
 
         private IWorkItemsGroup ThreadPool;
 
@@ -115,7 +115,8 @@ namespace Universal_Content_Builder.Content
                     file.ToLower().EndsWith(".mgcb") ||
                     file.ToLower().EndsWith(".ignore") ||
                     file.ToLower().EndsWith(".lock") ||
-                    file.ToLower().EndsWith("mgcb_tool.exe"))
+                    Path.GetFileName(file).ToLower() == "mgcb_tool.exe" ||
+                    Path.GetFileName(file).ToLower() == "meta")
                     continue;
 
                 // Model texture Ignore.
