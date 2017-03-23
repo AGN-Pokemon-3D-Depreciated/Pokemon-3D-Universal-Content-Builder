@@ -8,10 +8,13 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Release|MonoGame 3.5.1 = Release|MonoGame 3.5.1
+		Release|MonoGame 3.6 = Release|MonoGame 3.6
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{EE057806-FAE2-4F37-B85B-A5DE693E6E79}.Release|MonoGame 3.5.1.ActiveCfg = MonoGame|3.5.1
 		{EE057806-FAE2-4F37-B85B-A5DE693E6E79}.Release|MonoGame 3.5.1.Build.0 = MonoGame|3.5.1
+		{EE057806-FAE2-4F37-B85B-A5DE693E6E79}.Release|MonoGame 3.6.ActiveCfg = MonoGame|3.6
+		{EE057806-FAE2-4F37-B85B-A5DE693E6E79}.Release|MonoGame 3.6.Build.0 = MonoGame|3.6
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -26,20 +26,20 @@
     <DefineConstants>TRACE;XNA</DefineConstants>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MonoGame|3.5.1'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MonoGame|3.5.1' or '$(Configuration)|$(Platform)' == 'MonoGame|3.6'">
     <DefineConstants>TRACE;MonoGame</DefineConstants>
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(Platform)\MonoGame.Framework.dll</HintPath>
+      <HintPath>$(Configuration)\$(Platform)\MonoGame.Framework.dll</HintPath>
       <Aliases>MonoGame</Aliases>
       <Private>False</Private>
     </Reference>
     <Reference Include="MonoGame.Framework.Content.Pipeline">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(Platform)\MonoGame.Framework.Content.Pipeline.dll</HintPath>
+      <HintPath>$(Configuration)\$(Platform)\MonoGame.Framework.Content.Pipeline.dll</HintPath>
       <Aliases>MonoGame</Aliases>
       <Private>False</Private>
     </Reference>
@@ -76,7 +76,7 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="MonoGame.Tools.Pipeline.App.ico" />
-    <None Include="$(Platform)\*.*">
+    <None Include="$(Configuration)\$(Platform)\*.*">
       <Link>%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
