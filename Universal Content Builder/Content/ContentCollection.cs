@@ -114,7 +114,8 @@ namespace Universal_Content_Builder.Content
                     file.ToUpper().EndsWith("README") ||
                     file.ToLower().EndsWith(".mgcb") ||
                     file.ToLower().EndsWith(".ignore") ||
-                    file.ToLower().EndsWith(".lock"))
+                    file.ToLower().EndsWith(".lock") ||
+                    file.ToLower().EndsWith("mgcb_tool.exe"))
                     continue;
 
                 // Model texture Ignore.
