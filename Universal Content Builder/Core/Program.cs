@@ -19,16 +19,6 @@ namespace Universal_Content_Builder.Core
 
         public static int Main(string[] args)
         {
-            AppDomain.CurrentDomain.AssemblyResolve += (obj, e) =>
-            {
-                string AssemblyToLoad = e.Name.GetSplit(0, ',');
-
-                if (File.Exists((AppDomain.CurrentDomain.BaseDirectory + "/References/" + AssemblyToLoad + ".dll").GetFullPath()))
-                    return Assembly.LoadFile((AppDomain.CurrentDomain.BaseDirectory + "/References/" + AssemblyToLoad + ".dll").GetFullPath());
-                else
-                    return null;
-            };
-
             try
             {
                 Arguments = new ArgumentsHandler(args);
@@ -92,11 +82,8 @@ namespace Universal_Content_Builder.Core
                 if (!Arguments.Quiet)
                     Console.WriteLine("Generating MetaHash.");
 
-                using (FileStream FileStream = new FileStream((Arguments.OutputDirectory + "/meta").GetFullPath(), FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
-                {
-                    using (StreamWriter Writer = new StreamWriter(FileStream, new UTF8Encoding(false)) { AutoFlush = true })
-                        Writer.Write(string.Join(",", FinalResult));
-                }
+                using (StreamWriter Writer = new StreamWriter(new FileStream((Arguments.OutputDirectory + "/meta").GetFullPath(), FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite), new UTF8Encoding(false)) { AutoFlush = true })
+                    Writer.Write(string.Join(",", FinalResult));
 
                 MetaHash = Convert.ToBase64String(Encoding.UTF8.GetBytes(new FileStream((Arguments.OutputDirectory + "/meta").GetFullPath(), FileMode.Open, FileAccess.Read, FileShare.ReadWrite).ToMD5()));
 
@@ -117,11 +104,8 @@ namespace Universal_Content_Builder.Core
                 if (!Arguments.Quiet)
                     Console.WriteLine("Generating FileValidation.vb");
 
-                using (FileStream FileStream = new FileStream(FileValidationPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                {
-                    using (StreamReader Reader = new StreamReader(FileStream))
-                        Temp = Reader.ReadToEnd();
-                }
+                using (StreamReader Reader = new StreamReader(new FileStream(FileValidationPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)))
+                    Temp = Reader.ReadToEnd();
 
                 string[] Temp2 = Temp.Split('\n');
 
@@ -133,11 +117,8 @@ namespace Universal_Content_Builder.Core
                         Temp2[i] = "        Const METAHASH As String = \"" + MetaHash + "\"" + "\r";
                 }
 
-                using (FileStream FileStream = new FileStream(FileValidationPath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
-                {
-                    using (StreamWriter Writer = new StreamWriter(FileStream, Encoding.UTF8) { AutoFlush = true })
-                        Writer.Write(string.Join("\n", Temp2));
-                }
+                using (StreamWriter Writer = new StreamWriter(new FileStream(FileValidationPath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite), Encoding.UTF8) { AutoFlush = true })
+                    Writer.Write(string.Join("\n", Temp2));
             }
         }
 
@@ -148,15 +129,12 @@ namespace Universal_Content_Builder.Core
                 if (!Arguments.Quiet)
                     Console.WriteLine("Generating Content.mgcb");
 
-                using (FileStream FileStream = new FileStream((Arguments.WorkingDirectory + "/Content.mgcb").GetFullPath(), FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
+                using (StreamWriter Writer = new StreamWriter(new FileStream((Arguments.WorkingDirectory + "/Content.mgcb").GetFullPath(), FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite), Encoding.UTF8) { AutoFlush = true })
                 {
-                    using (StreamWriter Writer = new StreamWriter(FileStream, Encoding.UTF8) { AutoFlush = true })
-                    {
-                        Writer.Write(Arguments.GenerateMGCBProperty());
+                    Writer.Write(Arguments.GenerateMGCBProperty());
 
-                        foreach (Content.Content item in ContentCollection.ContentFiles)
-                            Writer.Write(item.ToString());
-                    }
+                    foreach (Content.Content item in ContentCollection.ContentFiles)
+                        Writer.Write(item.ToString());
                 }
             }
         }

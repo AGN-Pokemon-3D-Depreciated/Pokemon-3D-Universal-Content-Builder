@@ -3,8 +3,8 @@ using Modules.System.IO;
 using Modules.YamlDotNet.Serialization;
 using System.Collections.Generic;
 using System.IO;
-using Universal_Content_Builder.Core;
 using System.Linq;
+using Universal_Content_Builder.Core;
 
 namespace Universal_Content_Builder.Content
 {
@@ -144,11 +144,25 @@ namespace Universal_Content_Builder.Content
             {
                 Program.ContentCollection.Serialize($"{Program.Arguments.IntermediateDirectory}/Content.yml".GetFullPath());
 
-#if MonoGame
-                // Remove MonoGame Content (obj).
-                foreach (string file in Directory.GetFiles(Program.Arguments.IntermediateDirectory, "*.mgcontent", SearchOption.AllDirectories))
-                    File.Delete(file);
-#endif
+                foreach (string dir in Directory.GetDirectories(Program.Arguments.OutputDirectory, "*", SearchOption.AllDirectories))
+                {
+                    if (Directory.Exists(dir))
+                    {
+                        bool CanDelete = true;
+
+                        foreach (string file in Directory.GetFiles(dir, "*.*", SearchOption.AllDirectories))
+                        {
+                            if (File.Exists(file))
+                            {
+                                CanDelete = false;
+                                break;
+                            }
+                        }
+
+                        if (CanDelete)
+                            Directory.Delete(dir, true);
+                    }
+                }
             }
         }
     }

@@ -3,6 +3,7 @@ using Modules.System.IO;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 
 namespace Universal_Content_Builder.Core
 {
@@ -33,6 +34,8 @@ namespace Universal_Content_Builder.Core
         public bool GenerateMGCB { get; private set; }
 
         #endregion Additional Features
+
+        public Version BuildTool { get { return Assembly.LoadFile(PathHelper.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + "/MonoGame.Framework.Content.Pipeline.dll")).GetName().Version; } }
 
         public ArgumentsHandler(string[] args)
         {
@@ -70,17 +73,17 @@ namespace Universal_Content_Builder.Core
                     else if (StringHelper.Equals(item.Key, "Profile"))
                         Profile = item.Value;
                     else if (StringHelper.Equals(item.Key, "Compress"))
-                        Compress = Convert.ToBoolean(item.Value);
+                        Compress = item.Value.ToBool();
                     else if (StringHelper.Equals(item.Key, "Thread", "NumThread", "NumberOfThread"))
-                        NumThread = Convert.ToInt32(item.Value);
+                        NumThread = item.Value.ToInt();
                     else if (StringHelper.Equals(item.Key, "Rebuild"))
-                        Rebuild = Convert.ToBoolean(item.Value);
+                        Rebuild = item.Value.ToBool();
                     else if (StringHelper.Equals(item.Key, "Quiet", "Slient"))
-                        Quiet = Convert.ToBoolean(item.Value);
+                        Quiet = item.Value.ToBool();
                     else if (StringHelper.Equals(item.Key, "DumpMeta", "DumpMetaHash", "GenMeta", "GenerateMeta", "GenMetaHash", "GenerateMataHash"))
-                        GenerateMetaHash = Convert.ToBoolean(item.Value);
+                        GenerateMetaHash = item.Value.ToBool();
                     else if (StringHelper.Equals(item.Key, "DumpMGCB", "GenMGCB", "GenerateMGCB"))
-                        GenerateMGCB = Convert.ToBoolean(item.Value);
+                        GenerateMGCB = item.Value.ToBool();
                 }
                 catch (Exception) { }
             }

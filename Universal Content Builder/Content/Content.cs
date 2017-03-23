@@ -18,6 +18,7 @@ namespace Universal_Content_Builder.Content
 {
     public class Content
     {
+        public Version BuildTool { get; private set; }
         public string SourceFile { get; private set; }
         public string DestinationFile { get; private set; }
         public string Importer { get; private set; }
@@ -162,6 +163,7 @@ namespace Universal_Content_Builder.Content
         {
             SourceFile = sourceFile;
             Platform = platform;
+            BuildTool = Program.Arguments.BuildTool;
         }
 
         private void CheckFileHash()
@@ -178,16 +180,16 @@ namespace Universal_Content_Builder.Content
                 using (FileStream fileStream = new FileStream(SourceFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     newHash = fileStream.ToMD5();
 
-                if (!StringHelper.Equals(OutputHash, newHash))
+                if (!StringHelper.Equals(OutputHash, newHash) || Program.Arguments.BuildTool != BuildTool)
                 {
                     CleanFile();
+                    BuildTool = Program.Arguments.BuildTool;
                     OutputHash = newHash;
                     RebuildFlag = true;
                 }
                 else
                 {
-                    List<string> fileToCheck = new List<string>();
-                    fileToCheck.Add(DestinationFile.GetFullPath());
+                    List<string> fileToCheck = new List<string> { DestinationFile.GetFullPath() };
                     fileToCheck.AddRange(BuildOutput.Select(a => a.GetFullPath()));
                     fileToCheck.AddRange(BuildAsset.Select(a => a.GetFullPath()));
 
@@ -206,8 +208,7 @@ namespace Universal_Content_Builder.Content
 
         private void CleanFile()
         {
-            List<string> fileToRemove = new List<string>();
-            fileToRemove.Add(DestinationFile.GetFullPath());
+            List<string> fileToRemove = new List<string> { DestinationFile.GetFullPath() };
             fileToRemove.AddRange(BuildOutput.Select(a => a.GetFullPath()));
             fileToRemove.AddRange(BuildAsset.Select(a => a.GetFullPath()));
 
@@ -245,11 +246,8 @@ namespace Universal_Content_Builder.Content
                 temp = temp.Replace("ps_2_0", StringHelper.Equals(Program.Arguments.Platform, "DesktopGL") ? "ps_2_0" : "ps_4_0");
                 temp = temp.Replace("ps_4_0", StringHelper.Equals(Program.Arguments.Platform, "DesktopGL") ? "ps_2_0" : "ps_4_0");
 
-                using (FileStream FileStream = new FileStream(SourceFile, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
-                {
-                    using (StreamWriter Writer = new StreamWriter(FileStream, Encoding.UTF8) { AutoFlush = true })
-                        Writer.Write(temp);
-                }
+                using (StreamWriter Writer = new StreamWriter(new FileStream(SourceFile, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite), Encoding.UTF8) { AutoFlush = true })
+                    Writer.Write(temp);
 
                 Importer = "EffectImporter";
                 Processor = "EffectProcessor";
@@ -503,8 +501,10 @@ namespace Universal_Content_Builder.Content
             string relativePath = SourceFile.Replace(Program.Arguments.WorkingDirectory, "").Trim('/', '\\');
 
 #if MonoGame
-            PipelineManager manager = new PipelineManager(Program.Arguments.WorkingDirectory, Program.Arguments.OutputDirectory, Program.Arguments.IntermediateDirectory);
-            manager.CompressContent = Program.Arguments.Compress;
+            PipelineManager manager = new PipelineManager(Program.Arguments.WorkingDirectory, Program.Arguments.OutputDirectory, Program.Arguments.IntermediateDirectory)
+            {
+                CompressContent = Program.Arguments.Compress
+            };
 
             if (StringHelper.Equals(Program.Arguments.Platform, "DesktopGL"))
                 manager.Platform = TargetPlatform.DesktopGL;
@@ -544,10 +544,7 @@ namespace Universal_Content_Builder.Content
         public override string ToString()
         {
             string relativePath = SourceFile.Replace(Program.Arguments.WorkingDirectory, "").Trim('/', '\\');
-            List<string> result = new List<string>();
-
-            result.Add("#begin " + relativePath);
-
+            List<string> result = new List<string> { "#begin " + relativePath };
             if (string.IsNullOrEmpty(Importer) || string.IsNullOrEmpty(Processor))
                 result.Add("/copy:" + relativePath);
             else

@@ -2,8 +2,8 @@
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Configuration Condition="'$(Configuration)' == ''">MonoGame</Configuration>
+    <Platform Condition="'$(Platform)' == ''">3.5.1</Platform>
     <ProjectGuid>{EE057806-FAE2-4F37-B85B-A5DE693E6E79}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -14,45 +14,34 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <StartupObject>Universal_Content_Builder.Core.Program</StartupObject>
     <ApplicationIcon>MonoGame.Tools.Pipeline.App.ico</ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE;XNA</DefineConstants>
+    <OutputPath>bin\Release\</OutputPath>
     <Optimize>true</Optimize>
-    <PlatformTarget>x86</PlatformTarget>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE;MonoGame</DefineConstants>
-    <Optimize>true</Optimize>
-    <PlatformTarget>x64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
-  <PropertyGroup>
-    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'XNA|x86'">
+    <DefineConstants>TRACE;XNA</DefineConstants>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MonoGame|3.5.1'">
+    <DefineConstants>TRACE;MonoGame</DefineConstants>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Build" />
-    <Reference Include="Microsoft.Build.Framework" />
-    <Reference Include="Microsoft.Build.Utilities.v4.0" />
-    <Reference Include="MonoGame.Framework, Version=3.6.0.1625, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MonoGame.Framework">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>References\MonoGame.Framework.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>$(Platform)\MonoGame.Framework.dll</HintPath>
       <Aliases>MonoGame</Aliases>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="MonoGame.Framework.Content.Pipeline, Version=3.5.1.1679, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MonoGame.Framework.Content.Pipeline">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>References\MonoGame.Framework.Content.Pipeline.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>$(Platform)\MonoGame.Framework.Content.Pipeline.dll</HintPath>
       <Aliases>MonoGame</Aliases>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SmartThreadPool, Version=2.2.4.0, Culture=neutral, PublicKeyToken=1126fe8b671e8a79, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SmartThreadPool.dll.2.2.4\lib\net45\SmartThreadPool.dll</HintPath>
@@ -60,12 +49,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
     <Reference Include="YamlDotNet, Version=4.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\YamlDotNet.4.1.0\lib\net35\YamlDotNet.dll</HintPath>
       <Private>True</Private>
@@ -91,24 +75,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="References\*.*">
-      <Link>References\%(Filename)%(Extension)</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="References\External References\*.*">
+    <None Include="MonoGame.Tools.Pipeline.App.ico" />
+    <None Include="$(Platform)\*.*">
       <Link>%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="MonoGame.Tools.Pipeline.App.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="References\" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
 </Project>
