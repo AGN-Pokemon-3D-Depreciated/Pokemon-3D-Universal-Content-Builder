@@ -459,8 +459,8 @@ namespace Universal_Content_Builder.Content
             if (value.ToLower().StartsWith("sounds/".NormalizeFilePath()) ||
                 value.ToLower().Contains("content/sounds/".NormalizeFilePath()) ||
                 value.ToLower().Contains("content/sound effects/".NormalizeFilePath()) ||
-                value.ToLower().Contains("SharedResources/sounds/".NormalizeFilePath()) ||
-                value.ToLower().Contains("SharedResources/sound effects/".NormalizeFilePath()))
+                value.ToLower().Contains("sharedresources/sounds/".NormalizeFilePath()) ||
+                value.ToLower().Contains("sharedresources/sound effects/".NormalizeFilePath()))
                 return true;
             else
                 return false;
@@ -470,7 +470,7 @@ namespace Universal_Content_Builder.Content
         {
             if (value.ToLower().StartsWith("fonts/".NormalizeFilePath()) ||
                 value.ToLower().Contains("content/fonts/".NormalizeFilePath()) ||
-                value.ToLower().Contains("SharedResources/fonts/".NormalizeFilePath()))
+                value.ToLower().Contains("sharedresources/fonts/".NormalizeFilePath()))
                 return true;
             else
                 return false;
