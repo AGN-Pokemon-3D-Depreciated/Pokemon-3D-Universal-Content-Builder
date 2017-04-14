@@ -229,12 +229,17 @@ namespace Universal_Content_Builder.Content
         {
             string relativePath = SourceFile.Replace(Program.Arguments.WorkingDirectory, "").Trim('/', '\\');
 
+            string tempImporter = Importer;
+            string tempProcessor = Processor;
+
+            Dictionary<string, string> tempProcessorParam = new Dictionary<string, string>();
+            tempProcessorParam.Concat(ProcessorParam);
             ProcessorParam.Clear();
 
 #if MonoGame
-            // Effect Importer - MonoGame
             if (EffectImporter.Any(a => SourceFile.ToLower().EndsWith(a)))
             {
+                // Effect Importer - MonoGame
                 string temp;
 
                 using (StreamReader reader = new StreamReader(new FileStream(SourceFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite), Encoding.UTF8))
@@ -254,10 +259,9 @@ namespace Universal_Content_Builder.Content
                 Processor = "EffectProcessor";
                 ProcessorParam.Add("DebugMode", "Auto");
             }
-
-            // Fbx Importer - MonoGame
-            if (FbxImporter.Any(a => SourceFile.ToLower().EndsWith(a)))
+            else if (FbxImporter.Any(a => SourceFile.ToLower().EndsWith(a)))
             {
+                // Fbx Importer - MonoGame
                 Importer = "FbxImporter";
                 Processor = "ModelProcessor";
                 ProcessorParam.Add("ColorKeyColor", "0,0,0,0");
@@ -275,59 +279,29 @@ namespace Universal_Content_Builder.Content
                 ProcessorParam.Add("SwapWindingOrder", "False");
                 ProcessorParam.Add("TextureFormat", "Color");
             }
-
-            // Sprite Font Importer - MonoGame
-            if (FontDescriptionImporter.Any(a => SourceFile.ToLower().EndsWith(a)))
+            else if (XImporter.Any(a => SourceFile.ToLower().EndsWith(a)))
             {
-                Importer = "FontDescriptionImporter";
-                Processor = "FontDescriptionProcessor";
+                // X Importer - MonoGame
+                Importer = "XImporter";
+                Processor = "ModelProcessor";
+                ProcessorParam.Add("ColorKeyColor", "0,0,0,0");
+                ProcessorParam.Add("ColorKeyEnabled", "True");
+                ProcessorParam.Add("DefaultEffect", "BasicEffect");
+                ProcessorParam.Add("GenerateMipmaps", "True");
+                ProcessorParam.Add("GenerateTangentFrames", "False");
+                ProcessorParam.Add("PremultiplyTextureAlpha", "True");
+                ProcessorParam.Add("PremultiplyVertexColors", "True");
+                ProcessorParam.Add("ResizeTexturesToPowerOfTwo", "False");
+                ProcessorParam.Add("RotationX", "0");
+                ProcessorParam.Add("RotationY", "0");
+                ProcessorParam.Add("RotationZ", "0");
+                ProcessorParam.Add("Scale", "1");
+                ProcessorParam.Add("SwapWindingOrder", "False");
                 ProcessorParam.Add("TextureFormat", "Color");
             }
-
-            // H.264 Video - MonoGame
-            if (H264Importer.Any(a => SourceFile.ToLower().EndsWith(a)))
+            else if (OpenAssetImporter.Any(a => SourceFile.ToLower().EndsWith(a)))
             {
-                Importer = "H264Importer";
-                Processor = "VideoProcessor";
-            }
-
-            // Mp3 Importer - MonoGame
-            if (Mp3Importer.Any(a => SourceFile.ToLower().EndsWith(a)))
-            {
-                if (IsMusicAssets(relativePath))
-                {
-                    Importer = "Mp3Importer";
-                    Processor = "SongProcessor";
-                    ProcessorParam.Add("Quality", "Low");
-                }
-                else if (IsSoundAssets(relativePath))
-                {
-                    Importer = "Mp3Importer";
-                    Processor = "SoundEffectProcessor";
-                    ProcessorParam.Add("Quality", "Low");
-                }
-            }
-
-            // Ogg Importer - MonoGame
-            if (OggImporter.Any(a => SourceFile.ToLower().EndsWith(a)))
-            {
-                if (IsMusicAssets(relativePath))
-                {
-                    Importer = "OggImporter";
-                    Processor = "SongProcessor";
-                    ProcessorParam.Add("Quality", "Low");
-                }
-                else if (IsSoundAssets(relativePath))
-                {
-                    Importer = "OggImporter";
-                    Processor = "SoundEffectProcessor";
-                    ProcessorParam.Add("Quality", "Low");
-                }
-            }
-
-            // Open Asset Import Library - MonoGame
-            if (OpenAssetImporter.Any(a => SourceFile.ToLower().EndsWith(a)))
-            {
+                // Open Asset Import Library - MonoGame
                 Importer = "OpenAssetImporter";
                 Processor = "ModelProcessor";
                 ProcessorParam.Add("ColorKeyColor", "0,0,0,0");
@@ -345,10 +319,16 @@ namespace Universal_Content_Builder.Content
                 ProcessorParam.Add("SwapWindingOrder", "False");
                 ProcessorParam.Add("TextureFormat", "Color");
             }
-
-            // Texture Importer - MonoGame
-            if (TextureImporter.Any(a => SourceFile.ToLower().EndsWith(a)))
+            else if (FontDescriptionImporter.Any(a => SourceFile.ToLower().EndsWith(a)))
             {
+                // Sprite Font Importer - MonoGame
+                Importer = "FontDescriptionImporter";
+                Processor = "FontDescriptionProcessor";
+                ProcessorParam.Add("TextureFormat", "Color");
+            }
+            else if (TextureImporter.Any(a => SourceFile.ToLower().EndsWith(a)))
+            {
+                // Texture Importer - MonoGame
                 if (IsFontAssets(relativePath))
                 {
                     Importer = "TextureImporter";
@@ -370,10 +350,47 @@ namespace Universal_Content_Builder.Content
                     ProcessorParam.Add("TextureFormat", "Color");
                 }
             }
-
-            // Wav Importer - MonoGame
-            if (WavImporter.Any(a => SourceFile.ToLower().EndsWith(a)))
+            else if (H264Importer.Any(a => SourceFile.ToLower().EndsWith(a)))
             {
+                // H.264 Video - MonoGame
+                Importer = "H264Importer";
+                Processor = "VideoProcessor";
+            }
+            else if (Mp3Importer.Any(a => SourceFile.ToLower().EndsWith(a)))
+            {
+                // Mp3 Importer - MonoGame
+                if (IsMusicAssets(relativePath))
+                {
+                    Importer = "Mp3Importer";
+                    Processor = "SongProcessor";
+                    ProcessorParam.Add("Quality", "Low");
+                }
+                else if (IsSoundAssets(relativePath))
+                {
+                    Importer = "Mp3Importer";
+                    Processor = "SoundEffectProcessor";
+                    ProcessorParam.Add("Quality", "Low");
+                }
+            }
+            else if (OggImporter.Any(a => SourceFile.ToLower().EndsWith(a)))
+            {
+                // Ogg Importer - MonoGame
+                if (IsMusicAssets(relativePath))
+                {
+                    Importer = "OggImporter";
+                    Processor = "SongProcessor";
+                    ProcessorParam.Add("Quality", "Low");
+                }
+                else if (IsSoundAssets(relativePath))
+                {
+                    Importer = "OggImporter";
+                    Processor = "SoundEffectProcessor";
+                    ProcessorParam.Add("Quality", "Low");
+                }
+            }
+            else if (WavImporter.Any(a => SourceFile.ToLower().EndsWith(a)))
+            {
+                // Wav Importer - MonoGame
                 if (IsMusicAssets(relativePath))
                 {
                     Importer = "WavImporter";
@@ -387,10 +404,9 @@ namespace Universal_Content_Builder.Content
                     ProcessorParam.Add("Quality", "Low");
                 }
             }
-
-            // Wma Importer - MonoGame
-            if (WmaImporter.Any(a => SourceFile.ToLower().EndsWith(a)))
+            else if (WmaImporter.Any(a => SourceFile.ToLower().EndsWith(a)))
             {
+                // Wma Importer - MonoGame
                 if (IsMusicAssets(relativePath))
                 {
                     Importer = "WmaImporter";
@@ -404,42 +420,39 @@ namespace Universal_Content_Builder.Content
                     ProcessorParam.Add("Quality", "Low");
                 }
             }
-
-            // Wmv Importer - MonoGame
-            if (WmvImporter.Any(a => SourceFile.ToLower().EndsWith(a)))
+            else if (WmvImporter.Any(a => SourceFile.ToLower().EndsWith(a)))
             {
+                // Wmv Importer - MonoGame
                 Importer = "WmvImporter";
                 Processor = "VideoProcessor";
             }
-
-            // X Importer - MonoGame
-            if (XImporter.Any(a => SourceFile.ToLower().EndsWith(a)))
+            else if (XmlImporter.Any(a => SourceFile.ToLower().EndsWith(a)))
             {
-                Importer = "XImporter";
-                Processor = "ModelProcessor";
-                ProcessorParam.Add("ColorKeyColor", "0,0,0,0");
-                ProcessorParam.Add("ColorKeyEnabled", "True");
-                ProcessorParam.Add("DefaultEffect", "BasicEffect");
-                ProcessorParam.Add("GenerateMipmaps", "True");
-                ProcessorParam.Add("GenerateTangentFrames", "False");
-                ProcessorParam.Add("PremultiplyTextureAlpha", "True");
-                ProcessorParam.Add("PremultiplyVertexColors", "True");
-                ProcessorParam.Add("ResizeTexturesToPowerOfTwo", "False");
-                ProcessorParam.Add("RotationX", "0");
-                ProcessorParam.Add("RotationY", "0");
-                ProcessorParam.Add("RotationZ", "0");
-                ProcessorParam.Add("Scale", "1");
-                ProcessorParam.Add("SwapWindingOrder", "False");
-                ProcessorParam.Add("TextureFormat", "Color");
-            }
-
-            // Xml Importer - MonoGame
-            if (XmlImporter.Any(a => SourceFile.ToLower().EndsWith(a)))
-            {
+                // Xml Importer - MonoGame
                 Importer = "XmlImporter";
                 Processor = "PassThroughProcessor";
             }
 #endif
+
+            if (tempImporter != Importer || tempProcessor != Processor || tempProcessorParam.Count() != ProcessorParam.Count())
+            {
+                CleanFile();
+                BuildTool = Program.Arguments.BuildTool.ToString();
+                RebuildFlag = true;
+            }
+            else
+            {
+                foreach (KeyValuePair<string, string> item in tempProcessorParam)
+                {
+                    if (!ProcessorParam.ContainsKey(item.Key) || ProcessorParam[item.Key] != item.Value)
+                    {
+                        CleanFile();
+                        BuildTool = Program.Arguments.BuildTool.ToString();
+                        RebuildFlag = true;
+                        break;
+                    }
+                }
+            }
         }
 
         private bool IsMusicAssets(string value)
