@@ -433,23 +433,25 @@ namespace Universal_Content_Builder.Content
                 Processor = "PassThroughProcessor";
             }
 #endif
-
-            if (tempImporter != Importer || tempProcessor != Processor || tempProcessorParam.Count() != ProcessorParam.Count())
+            if (!(tempImporter == null && tempProcessor == null && tempProcessorParam.Count() == 0))
             {
-                CleanFile();
-                BuildTool = Program.Arguments.BuildTool.ToString();
-                RebuildFlag = true;
-            }
-            else
-            {
-                foreach (KeyValuePair<string, string> item in tempProcessorParam)
+                if (tempImporter != Importer || tempProcessor != Processor || tempProcessorParam.Count() != ProcessorParam.Count())
                 {
-                    if (!ProcessorParam.ContainsKey(item.Key) || ProcessorParam[item.Key] != item.Value)
+                    CleanFile();
+                    BuildTool = Program.Arguments.BuildTool.ToString();
+                    RebuildFlag = true;
+                }
+                else
+                {
+                    foreach (KeyValuePair<string, string> item in tempProcessorParam)
                     {
-                        CleanFile();
-                        BuildTool = Program.Arguments.BuildTool.ToString();
-                        RebuildFlag = true;
-                        break;
+                        if (!ProcessorParam.ContainsKey(item.Key) || ProcessorParam[item.Key] != item.Value)
+                        {
+                            CleanFile();
+                            BuildTool = Program.Arguments.BuildTool.ToString();
+                            RebuildFlag = true;
+                            break;
+                        }
                     }
                 }
             }
