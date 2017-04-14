@@ -140,24 +140,24 @@ namespace Universal_Content_Builder.Core
 
         public string GenerateMGCBProperty()
         {
-            List<string> Result = new List<string>();
-
-            Result.Add("");
-            Result.Add("#----------------------------- Global Properties ----------------------------#");
-            Result.Add("");
-            Result.Add("/outputDir:bin");
-            Result.Add("/intermediateDir:obj");
-            Result.Add("/platform:" + Platform);
-            Result.Add("/config:");
-            Result.Add("/profile:" + Profile);
-            Result.Add("/compress:" + Compress.ToString());
-            Result.Add("");
-            Result.Add("#-------------------------------- References --------------------------------#");
-            Result.Add("");
-            Result.Add("");
-            Result.Add("#---------------------------------- Content ---------------------------------#");
-            Result.Add(Environment.NewLine);
-
+            List<string> Result = new List<string>
+            {
+                "",
+                "#----------------------------- Global Properties ----------------------------#",
+                "",
+                "/outputDir:bin",
+                "/intermediateDir:obj",
+                "/platform:" + Platform,
+                "/config:",
+                "/profile:" + Profile,
+                "/compress:" + Compress.ToString(),
+                "",
+                "#-------------------------------- References --------------------------------#",
+                "",
+                "",
+                "#---------------------------------- Content ---------------------------------#",
+                Environment.NewLine
+            };
             return string.Join(Environment.NewLine, Result);
         }
 

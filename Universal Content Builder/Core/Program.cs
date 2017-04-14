@@ -1,12 +1,10 @@
-﻿using Modules.System;
-using Modules.System.IO;
+﻿using Modules.System.IO;
 using Modules.System.Security.Cryptography;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using Universal_Content_Builder.Content;
 
@@ -41,10 +39,10 @@ namespace Universal_Content_Builder.Core
                 {
                     Console.WriteLine("Build completed!");
                     Console.WriteLine("Total Elapsed time: " + StopWatch.Elapsed.ToString());
-                }
 
-                GenerateMetaHash();
-                GenerateMGCBFile();
+                    GenerateMetaHash();
+                    GenerateMGCBFile();
+                }
             }
             catch (Exception ex)
             {

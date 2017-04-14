@@ -294,13 +294,13 @@ namespace Universal_Content_Builder.Content
             // Mp3 Importer - MonoGame
             if (Mp3Importer.Any(a => SourceFile.ToLower().EndsWith(a)))
             {
-                if (relativePath.ToLower().StartsWith("songs/".NormalizeFilePath()) || relativePath.ToLower().StartsWith("content/songs/".NormalizeFilePath()))
+                if (IsMusicAssets(relativePath))
                 {
                     Importer = "Mp3Importer";
                     Processor = "SongProcessor";
                     ProcessorParam.Add("Quality", "Low");
                 }
-                else if (relativePath.ToLower().StartsWith("sounds/".NormalizeFilePath()) || relativePath.ToLower().StartsWith("content/sounds/".NormalizeFilePath()))
+                else if (IsSoundAssets(relativePath))
                 {
                     Importer = "Mp3Importer";
                     Processor = "SoundEffectProcessor";
@@ -311,13 +311,13 @@ namespace Universal_Content_Builder.Content
             // Ogg Importer - MonoGame
             if (OggImporter.Any(a => SourceFile.ToLower().EndsWith(a)))
             {
-                if (relativePath.ToLower().StartsWith("songs/".NormalizeFilePath()) || relativePath.ToLower().StartsWith("content/songs/".NormalizeFilePath()))
+                if (IsMusicAssets(relativePath))
                 {
                     Importer = "OggImporter";
                     Processor = "SongProcessor";
                     ProcessorParam.Add("Quality", "Low");
                 }
-                else if (relativePath.ToLower().StartsWith("sounds/".NormalizeFilePath()) || relativePath.ToLower().StartsWith("content/sounds/".NormalizeFilePath()))
+                else if (IsSoundAssets(relativePath))
                 {
                     Importer = "OggImporter";
                     Processor = "SoundEffectProcessor";
@@ -349,7 +349,7 @@ namespace Universal_Content_Builder.Content
             // Texture Importer - MonoGame
             if (TextureImporter.Any(a => SourceFile.ToLower().EndsWith(a)))
             {
-                if (relativePath.ToLower().StartsWith("fonts/".NormalizeFilePath()) || relativePath.ToLower().StartsWith("content/fonts/".NormalizeFilePath()))
+                if (IsFontAssets(relativePath))
                 {
                     Importer = "TextureImporter";
                     Processor = "FontTextureProcessor";
@@ -374,13 +374,13 @@ namespace Universal_Content_Builder.Content
             // Wav Importer - MonoGame
             if (WavImporter.Any(a => SourceFile.ToLower().EndsWith(a)))
             {
-                if (relativePath.ToLower().StartsWith("songs/".NormalizeFilePath()) || relativePath.ToLower().StartsWith("content/songs/".NormalizeFilePath()))
+                if (IsMusicAssets(relativePath))
                 {
                     Importer = "WavImporter";
                     Processor = "SongProcessor";
                     ProcessorParam.Add("Quality", "Low");
                 }
-                else if (relativePath.ToLower().StartsWith("sounds/".NormalizeFilePath()) || relativePath.ToLower().StartsWith("content/sounds/".NormalizeFilePath()))
+                else if (IsSoundAssets(relativePath))
                 {
                     Importer = "WavImporter";
                     Processor = "SoundEffectProcessor";
@@ -391,13 +391,13 @@ namespace Universal_Content_Builder.Content
             // Wma Importer - MonoGame
             if (WmaImporter.Any(a => SourceFile.ToLower().EndsWith(a)))
             {
-                if (relativePath.ToLower().StartsWith("songs/".NormalizeFilePath()) || relativePath.ToLower().StartsWith("content/songs/".NormalizeFilePath()))
+                if (IsMusicAssets(relativePath))
                 {
                     Importer = "WmaImporter";
                     Processor = "SongProcessor";
                     ProcessorParam.Add("Quality", "Low");
                 }
-                else if (relativePath.ToLower().StartsWith("sounds/".NormalizeFilePath()) || relativePath.ToLower().StartsWith("content/sounds/".NormalizeFilePath()))
+                else if (IsSoundAssets(relativePath))
                 {
                     Importer = "WmaImporter";
                     Processor = "SoundEffectProcessor";
@@ -440,6 +440,40 @@ namespace Universal_Content_Builder.Content
                 Processor = "PassThroughProcessor";
             }
 #endif
+        }
+
+        private bool IsMusicAssets(string value)
+        {
+            if (value.ToLower().StartsWith("songs/".NormalizeFilePath()) ||
+                value.ToLower().Contains("content/songs/".NormalizeFilePath()) ||
+                value.ToLower().Contains("content/music/".NormalizeFilePath()) ||
+                value.ToLower().Contains("SharedResources/songs/".NormalizeFilePath()) ||
+                value.ToLower().Contains("SharedResources/music/".NormalizeFilePath()))
+                return true;
+            else
+                return false;
+        }
+
+        private bool IsSoundAssets(string value)
+        {
+            if (value.ToLower().StartsWith("sounds/".NormalizeFilePath()) ||
+                value.ToLower().Contains("content/sounds/".NormalizeFilePath()) ||
+                value.ToLower().Contains("content/sound effects/".NormalizeFilePath()) ||
+                value.ToLower().Contains("SharedResources/sounds/".NormalizeFilePath()) ||
+                value.ToLower().Contains("SharedResources/sound effects/".NormalizeFilePath()))
+                return true;
+            else
+                return false;
+        }
+
+        private bool IsFontAssets(string value)
+        {
+            if (value.ToLower().StartsWith("fonts/".NormalizeFilePath()) ||
+                value.ToLower().Contains("content/fonts/".NormalizeFilePath()) ||
+                value.ToLower().Contains("SharedResources/fonts/".NormalizeFilePath()))
+                return true;
+            else
+                return false;
         }
 
         public void BuildContent()
