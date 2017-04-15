@@ -54,6 +54,7 @@ namespace Universal_Content_Builder.Content
             Platform = platform;
             BuildTool = Program.Arguments.BuildTool.ToString();
             FirstBuild = true;
+            RebuildFlag = true;
         }
 
         private void CleanFile()
