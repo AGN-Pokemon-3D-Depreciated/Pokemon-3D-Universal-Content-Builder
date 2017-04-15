@@ -1,20 +1,46 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+VisualStudioVersion = 15.0.26403.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Universal Content Builder", "Universal Content Builder\Universal Content Builder.csproj", "{EE057806-FAE2-4F37-B85B-A5DE693E6E79}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.System", "Modules.System\Modules.System\Modules.System.csproj", "{ABDB3EEC-AB40-466F-9FCC-D4EA21385962}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|MonoGame 3.5.1 = Debug|MonoGame 3.5.1
+		Debug|MonoGame 3.6 = Debug|MonoGame 3.6
+		Release|Any CPU = Release|Any CPU
 		Release|MonoGame 3.5.1 = Release|MonoGame 3.5.1
 		Release|MonoGame 3.6 = Release|MonoGame 3.6
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EE057806-FAE2-4F37-B85B-A5DE693E6E79}.Debug|Any CPU.ActiveCfg = MonoGame|x86
+		{EE057806-FAE2-4F37-B85B-A5DE693E6E79}.Debug|Any CPU.Build.0 = MonoGame|x86
+		{EE057806-FAE2-4F37-B85B-A5DE693E6E79}.Debug|MonoGame 3.5.1.ActiveCfg = MonoGame|x86
+		{EE057806-FAE2-4F37-B85B-A5DE693E6E79}.Debug|MonoGame 3.5.1.Build.0 = MonoGame|x86
+		{EE057806-FAE2-4F37-B85B-A5DE693E6E79}.Debug|MonoGame 3.6.ActiveCfg = MonoGame|x86
+		{EE057806-FAE2-4F37-B85B-A5DE693E6E79}.Debug|MonoGame 3.6.Build.0 = MonoGame|x86
+		{EE057806-FAE2-4F37-B85B-A5DE693E6E79}.Release|Any CPU.ActiveCfg = MonoGame|x86
+		{EE057806-FAE2-4F37-B85B-A5DE693E6E79}.Release|Any CPU.Build.0 = MonoGame|x86
 		{EE057806-FAE2-4F37-B85B-A5DE693E6E79}.Release|MonoGame 3.5.1.ActiveCfg = MonoGame|3.5.1
 		{EE057806-FAE2-4F37-B85B-A5DE693E6E79}.Release|MonoGame 3.5.1.Build.0 = MonoGame|3.5.1
 		{EE057806-FAE2-4F37-B85B-A5DE693E6E79}.Release|MonoGame 3.6.ActiveCfg = MonoGame|3.6
 		{EE057806-FAE2-4F37-B85B-A5DE693E6E79}.Release|MonoGame 3.6.Build.0 = MonoGame|3.6
+		{ABDB3EEC-AB40-466F-9FCC-D4EA21385962}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABDB3EEC-AB40-466F-9FCC-D4EA21385962}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABDB3EEC-AB40-466F-9FCC-D4EA21385962}.Debug|MonoGame 3.5.1.ActiveCfg = Debug|Any CPU
+		{ABDB3EEC-AB40-466F-9FCC-D4EA21385962}.Debug|MonoGame 3.5.1.Build.0 = Debug|Any CPU
+		{ABDB3EEC-AB40-466F-9FCC-D4EA21385962}.Debug|MonoGame 3.6.ActiveCfg = Debug|Any CPU
+		{ABDB3EEC-AB40-466F-9FCC-D4EA21385962}.Debug|MonoGame 3.6.Build.0 = Debug|Any CPU
+		{ABDB3EEC-AB40-466F-9FCC-D4EA21385962}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABDB3EEC-AB40-466F-9FCC-D4EA21385962}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABDB3EEC-AB40-466F-9FCC-D4EA21385962}.Release|MonoGame 3.5.1.ActiveCfg = Release|Any CPU
+		{ABDB3EEC-AB40-466F-9FCC-D4EA21385962}.Release|MonoGame 3.5.1.Build.0 = Release|Any CPU
+		{ABDB3EEC-AB40-466F-9FCC-D4EA21385962}.Release|MonoGame 3.6.ActiveCfg = Release|Any CPU
+		{ABDB3EEC-AB40-466F-9FCC-D4EA21385962}.Release|MonoGame 3.6.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

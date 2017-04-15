@@ -56,18 +56,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Content\Assets.cs" />
     <Compile Include="Content\Content.cs" />
     <Compile Include="Content\ContentCollection.cs" />
     <Compile Include="Core\ArgumentsHandler.cs" />
-    <Compile Include="Modules\System\Collections\Generic\NonCaseSensitiveHelper.cs" />
-    <Compile Include="Modules\System\DateTimeHelper.cs" />
-    <Compile Include="Modules\System\IO\DirectoryHelper.cs" />
-    <Compile Include="Modules\System\IO\PathHelper.cs" />
-    <Compile Include="Modules\System\MathHelper.cs" />
-    <Compile Include="Modules\System\Net\IPAddressHelper.cs" />
-    <Compile Include="Modules\System\Security\Cryptography\CryptographyHelper.cs" />
-    <Compile Include="Modules\System\StringHelper.cs" />
-    <Compile Include="Modules\System\Threading\ThreadHelper.cs" />
     <Compile Include="Modules\YamlDotNet\Serialization\DeserializerHelper.cs" />
     <Compile Include="Modules\YamlDotNet\Serialization\SerializerHelper.cs" />
     <Compile Include="Core\Program.cs" />
@@ -80,6 +72,12 @@
       <Link>%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Modules.System\Modules.System\Modules.System.csproj">
+      <Project>{abdb3eec-ab40-466f-9fcc-d4ea21385962}</Project>
+      <Name>Modules.System</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

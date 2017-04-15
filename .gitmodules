@@ -1,0 +1,3 @@
+[submodule "Modules.System"]
+	path = Modules.System
+	url = https://github.com/TheDialgaTeam/Modules.System.git

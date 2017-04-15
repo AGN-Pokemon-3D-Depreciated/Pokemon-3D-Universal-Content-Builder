@@ -14,50 +14,6 @@ namespace Universal_Content_Builder.Content
 
         private IWorkItemsGroup ThreadPool;
 
-        // Open Asset Import Library - MonoGame
-        private List<string> OpenAssetImporter = new List<string>()
-        {
-            ".fbx",
-            ".dae", // Collada
-            ".gltf", "glb", // glTF
-            ".blend", // Blender 3D
-            ".3ds", // 3ds Max 3DS
-            ".ase", // 3ds Max ASE
-            ".obj", // Wavefront Object
-            ".ifc", // Industry Foundation Classes (IFC/Step)
-            ".xgl", ".zgl", // XGL
-            ".ply", // Stanford Polygon Library
-            ".dxf", // AutoCAD DXF
-            ".lwo", // LightWave
-            ".lws", // LightWave Scene
-            ".lxo", // Modo
-            ".stl", // Stereolithography
-            ".ac", // AC3D
-            ".ms3d", // Milkshape 3D
-            ".cob", ".scn", // TrueSpace
-            ".bvh", // Biovision BVH
-            ".csm", // CharacterStudio Motion
-            ".irrmesh", // Irrlicht Mesh
-            ".irr", // Irrlicht Scene
-            ".mdl", // Quake I, 3D GameStudio (3DGS)
-            ".md2", // Quake II
-            ".md3", // Quake III Mesh
-            ".pk3", // Quake III Map/BSP
-            ".mdc", // Return to Castle Wolfenstein
-            ".md5", // Doom 3
-            ".smd", ".vta", // Valve Model
-            ".ogex", // Open Game Engine Exchange
-            ".3d", // Unreal
-            ".b3d", // BlitzBasic 3D
-            ".q3d", ".q3s", // Quick3D
-            ".nff", // Neutral File Format, Sense8 WorldToolKit
-            ".off", // Object File Format
-            ".ter", // Terragen Terrain
-            ".hmp", // 3D GameStudio (3DGS) Terrain
-            ".ndo", // Izware Nendo
-            ".x"
-        };
-
         public ContentCollection()
         {
             ThreadPool = new SmartThreadPool().CreateWorkItemsGroup(Program.Arguments.NumThread);
@@ -119,11 +75,14 @@ namespace Universal_Content_Builder.Content
                     Path.GetFileName(file).ToLower() == "meta")
                     continue;
 
+                Assets assets = new Assets(file);
+
                 // Model texture Ignore.
-                if (relativePath.ToLower().StartsWith("content/models/".NormalizeFilePath()) ||
-                    relativePath.ToLower().StartsWith("models/".NormalizeFilePath()))
+                if (relativePath.ToLower().StartsWith("models/".NormalizeFilePath()) ||
+                    relativePath.ToLower().Contains("content/models/".NormalizeFilePath()) ||
+                    relativePath.ToLower().Contains("sharedresources/models/".NormalizeFilePath()))
                 {
-                    if (!OpenAssetImporter.Any(a => file.ToLower().EndsWith(a)))
+                    if (!assets.IsModelAssets())
                         continue;
                 }
 

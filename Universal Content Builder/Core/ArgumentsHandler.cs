@@ -35,7 +35,7 @@ namespace Universal_Content_Builder.Core
 
         #endregion Additional Features
 
-        public Version BuildTool { get { return Assembly.LoadFile(PathHelper.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + "/MonoGame.Framework.Content.Pipeline.dll")).GetName().Version; } }
+        public Version BuildTool { get; private set; }
 
         public ArgumentsHandler(string[] args)
         {
@@ -62,28 +62,50 @@ namespace Universal_Content_Builder.Core
             {
                 try
                 {
-                    if (StringHelper.Equals(item.Key, "Content", "ContentDir", "ContentDirectory", "WorkingDir", "WorkingDirectory"))
+                    if (item.Key.Equals("Content", StringComparison.OrdinalIgnoreCase) ||
+                        item.Key.Equals("ContentDir", StringComparison.OrdinalIgnoreCase) ||
+                        item.Key.Equals("ContentDirectory", StringComparison.OrdinalIgnoreCase) ||
+                        item.Key.Equals("WorkingDir", StringComparison.OrdinalIgnoreCase) ||
+                        item.Key.Equals("WorkingDirectory", StringComparison.OrdinalIgnoreCase))
                         WorkingDirectory = item.Value.GetFullPath();
-                    else if (StringHelper.Equals(item.Key, "Bin", "BinDir", "OutputDir", "OutputDirectory"))
+                    else if (item.Key.Equals("Bin", StringComparison.OrdinalIgnoreCase) ||
+                        item.Key.Equals("BinDir", StringComparison.OrdinalIgnoreCase) ||
+                        item.Key.Equals("BinDirectory", StringComparison.OrdinalIgnoreCase) ||
+                        item.Key.Equals("OutputDir", StringComparison.OrdinalIgnoreCase) ||
+                        item.Key.Equals("OutputDirectory", StringComparison.OrdinalIgnoreCase))
                         OutputDirectory = item.Value.GetFullPath();
-                    else if (StringHelper.Equals(item.Key, "Obj", "ObjDir", "IntermediateDir", "IntermediateDirectory"))
+                    else if (item.Key.Equals("Obj", StringComparison.OrdinalIgnoreCase) ||
+                        item.Key.Equals("ObjDir", StringComparison.OrdinalIgnoreCase) ||
+                        item.Key.Equals("ObjDirectory", StringComparison.OrdinalIgnoreCase) ||
+                        item.Key.Equals("IntermediateDir", StringComparison.OrdinalIgnoreCase) ||
+                        item.Key.Equals("IntermediateDirectory", StringComparison.OrdinalIgnoreCase))
                         IntermediateDirectory = item.Value.GetFullPath();
-                    else if (StringHelper.Equals(item.Key, "Platform"))
+                    else if (item.Key.Equals("Platform", StringComparison.OrdinalIgnoreCase))
                         Platform = item.Value;
-                    else if (StringHelper.Equals(item.Key, "Profile"))
+                    else if (item.Key.Equals("Profile", StringComparison.OrdinalIgnoreCase))
                         Profile = item.Value;
-                    else if (StringHelper.Equals(item.Key, "Compress"))
-                        Compress = item.Value.ToBool();
-                    else if (StringHelper.Equals(item.Key, "Thread", "NumThread", "NumberOfThread"))
-                        NumThread = item.Value.ToInt();
-                    else if (StringHelper.Equals(item.Key, "Rebuild"))
-                        Rebuild = item.Value.ToBool();
-                    else if (StringHelper.Equals(item.Key, "Quiet", "Slient"))
-                        Quiet = item.Value.ToBool();
-                    else if (StringHelper.Equals(item.Key, "DumpMeta", "DumpMetaHash", "GenMeta", "GenerateMeta", "GenMetaHash", "GenerateMataHash"))
-                        GenerateMetaHash = item.Value.ToBool();
-                    else if (StringHelper.Equals(item.Key, "DumpMGCB", "GenMGCB", "GenerateMGCB"))
-                        GenerateMGCB = item.Value.ToBool();
+                    else if (item.Key.Equals("Compress", StringComparison.OrdinalIgnoreCase))
+                        Compress = item.Value.ToBoolean();
+                    else if (item.Key.Equals("Thread", StringComparison.OrdinalIgnoreCase) ||
+                        item.Key.Equals("NumThread", StringComparison.OrdinalIgnoreCase) ||
+                        item.Key.Equals("NumberOfThread", StringComparison.OrdinalIgnoreCase))
+                        NumThread = item.Value.ToInt32();
+                    else if (item.Key.Equals("Rebuild", StringComparison.OrdinalIgnoreCase))
+                        Rebuild = item.Value.ToBoolean();
+                    else if (item.Key.Equals("Quiet", StringComparison.OrdinalIgnoreCase) ||
+                        item.Key.Equals("Slient", StringComparison.OrdinalIgnoreCase))
+                        Quiet = item.Value.ToBoolean();
+                    else if (item.Key.Equals("DumpMeta", StringComparison.OrdinalIgnoreCase) ||
+                        item.Key.Equals("DumpMetaHash", StringComparison.OrdinalIgnoreCase) ||
+                        item.Key.Equals("GenMeta", StringComparison.OrdinalIgnoreCase) ||
+                        item.Key.Equals("GenerateMeta", StringComparison.OrdinalIgnoreCase) ||
+                        item.Key.Equals("GenMetaHash", StringComparison.OrdinalIgnoreCase) ||
+                        item.Key.Equals("GenerateMataHash", StringComparison.OrdinalIgnoreCase))
+                        GenerateMetaHash = item.Value.ToBoolean();
+                    else if (item.Key.Equals("DumpMGCB", StringComparison.OrdinalIgnoreCase) ||
+                        item.Key.Equals("GenMGCB", StringComparison.OrdinalIgnoreCase) ||
+                        item.Key.Equals("GenerateMGCB", StringComparison.OrdinalIgnoreCase))
+                        GenerateMGCB = item.Value.ToBoolean();
                 }
                 catch (Exception) { }
             }
@@ -94,7 +116,7 @@ namespace Universal_Content_Builder.Core
                 Environment.Exit(-1);
             }
 
-            if (StringHelper.Equals(Platform, "XNA"))
+            if (Platform.Equals("XNA", StringComparison.OrdinalIgnoreCase))
             {
                 if (Environment.Is64BitProcess)
                 {
@@ -106,29 +128,36 @@ namespace Universal_Content_Builder.Core
                     Console.Error.WriteLine("The XNA content tools only work on a windows platform.");
                     Environment.Exit(-1);
                 }
-                else if (StringHelper.Equals(Environment.ExpandEnvironmentVariables("%XNAGSv4%"), "%XNAGSv4%") || !Directory.Exists(Environment.ExpandEnvironmentVariables("%XNAGSv4%").GetFullPath()))
+                else if (Environment.ExpandEnvironmentVariables("%XNAGSv4%").Equals("%XNAGSv4%", StringComparison.OrdinalIgnoreCase) || !Directory.Exists(Environment.ExpandEnvironmentVariables("%XNAGSv4%").GetFullPath()))
                 {
                     Console.Error.WriteLine("Unable to find XNA game studio 4.0.");
                     Environment.Exit(-1);
                 }
-            }
 
-            if (StringHelper.Equals(Platform, "DesktopGL", "Windows"))
+                BuildTool = new Version(1, 4, 0, 0);
+            }
+            else if (Platform.Equals("DesktopGL", StringComparison.OrdinalIgnoreCase) || Platform.Equals("Windows", StringComparison.OrdinalIgnoreCase))
             {
                 if (!Environment.Is64BitProcess)
                 {
                     Console.Error.WriteLine("The MonoGame content tools only work on a 64 bit application.");
                     Environment.Exit(-1);
                 }
-            }
+                else if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+                {
+                    Console.Error.WriteLine("The MonoGame content tools only work on a windows platform.");
+                    Environment.Exit(-1);
+                }
 
-            if (!StringHelper.Equals(Platform, "XNA", "DesktopGL", "Windows"))
+                BuildTool = Assembly.LoadFile((AppDomain.CurrentDomain.BaseDirectory + "/MonoGame.Framework.Content.Pipeline.dll").GetFullPath()).GetName().Version;
+            }
+            else
             {
                 Console.Error.WriteLine("Unknown Platform.");
                 Environment.Exit(-1);
             }
 
-            if (!StringHelper.Equals(Profile, "Reach", "HiDef"))
+            if (!Profile.Equals("Reach", StringComparison.OrdinalIgnoreCase) && !Profile.Equals("HiDef", StringComparison.OrdinalIgnoreCase))
             {
                 Console.Error.WriteLine("Unknown Profile.");
                 Environment.Exit(-1);
