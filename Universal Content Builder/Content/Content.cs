@@ -118,9 +118,12 @@ namespace Universal_Content_Builder.Content
                         }
                         else
                         {
-                            List<string> fileToCheck = new List<string> { DestinationFile.GetFullPath() };
-                            fileToCheck.AddRange(BuildOutput.Select(a => a.GetFullPath()));
-                            fileToCheck.AddRange(BuildAsset.Select(a => a.GetFullPath()));
+                            List<string> fileToCheck = new List<string>();
+
+                            if (DestinationFile != null)
+                                fileToCheck.Add(DestinationFile.GetFullPath());
+
+                            fileToCheck = fileToCheck.Union(BuildOutput).Union(BuildAsset).ToList();
 
                             foreach (string file in fileToCheck)
                             {
@@ -340,10 +343,13 @@ namespace Universal_Content_Builder.Content
 
                 if (!FirstBuild)
                 {
-                    if (!tempImporter.Equals(Importer, StringComparison.OrdinalIgnoreCase) ||
+                    if (Importer != null && Processor != null)
+                    {
+                        if (!tempImporter.Equals(Importer, StringComparison.OrdinalIgnoreCase) ||
                         !tempProcessor.Equals(Processor, StringComparison.OrdinalIgnoreCase) ||
                         tempProcessorParam.Select(a => a.Key + "=" + a.Value).Join(";").Equals(ProcessorParam.Select(a => a.Key + "=" + a.Value).Join(";"), StringComparison.OrdinalIgnoreCase))
-                        RebuildFlag = true;
+                            RebuildFlag = true;
+                    }
 
                     tempImporter = null;
                     tempProcessor = null;
